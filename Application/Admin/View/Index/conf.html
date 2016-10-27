@@ -1,0 +1,151 @@
+<include file="Common/head" />
+
+<!-- BEGIN SECTION -->
+<section id="container">
+    <include file="Common/header" />
+    <include file="Common/nav" />
+
+    <!-- BEGIN MAIN CONTENT -->
+    <section id="main-content">
+        <!-- BEGIN WRAPPER  -->
+        <section class="wrapper">
+
+            <!-- BEGIN ROW 用户留言信息  -->
+            <div class="row">
+                <div class="col-lg-8">
+                    <section class="panel">
+                        <div class="panel-body">
+                            <a href="#" class="task-thumb">
+                                <img src="img/avatar1.jpg" alt="">
+                            </a>
+                            <div class="task-thumb-details">
+                                <h1>
+                                    <a href="#">
+                                        首页管理
+                                    </a>
+                                </h1>
+                                <p>
+                                    首页显示信息
+                                </p>
+                            </div>
+                        </div>
+
+                        <table class="table table-hover personal-task">
+                            <tbody>
+                            <?php foreach($confs as $k=>$v){ ?>
+                                <tr>
+                                    <td style="width: 100px"><?php echo $k;?></td>
+                                    <td style="width: 150px">
+                                        <select name="cid" id="<?php echo $k.'_sel1'; ?>" sid="<?php echo $k.'_sel2'; ?>" key="<?php echo $k;?>" aid="<?php echo $v['aid'];?>" onchange="chgCate(this)">
+                                            <option value="0">请选择</option>
+
+                                            <?php foreach($cates as $key=>$val){ ?>
+                                                <?php if($v['cid']==$val['cate_id']){ ?>
+                                                    <option value="<?php echo $val['cate_id']; ?>" selected><?php echo $val['cate_name']; ?></option>
+                                                <?php } else {?>
+                                                    <option value="<?php echo $val['cate_id']; ?>"><?php echo $val['cate_name']; ?></option>
+                                                <?php } ?>
+                                            <?php } ?>
+
+                                        </select>
+                                    </td>
+                                    <td style="width: 150px">
+                                        <?php if($v[aid]==0){ ?>
+
+                                        <?php } else { ?>
+                                            <select key="<?php echo $k; ?>" id="<?php echo $k.'_sel2'; ?>" pid="<?php echo $k.'_sel1'; ?>" name="aid" onchange="chgArti(this)">
+                                                <option value="-1">请选择</option>
+                                                <?php foreach($v['article'] as $key=>$val){ ?>
+
+                                                    <?php if($v['aid']==$val['ar_id']){ ?>
+                                                        <option value="<?php echo $val['ar_id']; ?>" selected><?php echo $val['ar_title']; ?></option>
+                                                    <?php } else {?>
+                                                        <option value="<?php echo $val['ar_id']; ?>"><?php echo $val['ar_title']; ?></option>
+                                                    <?php } ?>
+                                                <?php } ?>
+                                            </select>
+                                        <?php } ?>
+                                    </td>
+                                    <td>
+                                        <div id="work-progress">
+                                        </div>
+                                    </td>
+                                </tr>
+                            <?php } ?>
+
+
+                            </tbody>
+                        </table>
+                    </section>
+                </div>
+            </div>
+            <!-- END ROW  -->
+
+        </section>
+        <!-- END WRAPPER  -->
+    </section>
+    <!-- END MAIN CONTENT -->
+
+    <include file="Common/footee" />
+</section>
+
+<include file="Common/footer" />
+<script type="text/javascript" language="JavaScript">
+    var chgCateUrl = "__MODULE__/Ajax/articlesFromCategory";
+    var chgConfUrl = "__MODULE__/Ajax/chgIndexConf";
+
+    function editConf(key,cid,aid){
+        $.post(chgConfUrl,{"key":key,"cid":cid,"aid":aid},function(data){
+
+        });
+    }
+
+    function chgCate($this){
+        //清空article的选项
+        var sid = $this.getAttribute("sid");
+        var articlesel = document.getElementById(sid);
+        if(articlesel){ articlesel.innerHTML = "<option value=\"0\">请选择</option>"; }
+
+
+        var index = $this.selectedIndex;
+        var options = $this.options;
+        var selop = options[index];
+
+        var key = $this.getAttribute("key");;
+        var cid = selop.getAttribute("value");
+        var aid = $this.getAttribute("aid");
+        if(aid==0){
+            editConf(key,cid,0);
+        }else{
+            $.post(chgCateUrl,{"cid":selop.value},function(data){
+                for(var i=0;i<data.length;i++){
+                    var newop = document.createElement("option");
+                    newop.setAttribute("value",data[i]['ar_id']);
+                    newop.innerText = data[i]['ar_title'];
+                    articlesel.appendChild(newop);
+                }
+            })
+        }
+
+
+    }
+    function chgArti($this){
+        var sel1 = document.getElementById($this.getAttribute("pid"));
+        var sel2 = $this;
+        var key = $this.getAttribute("key");
+
+        var index1 = sel1.selectedIndex;
+        var options1 = sel1.options;
+        var op1 = options1[index1];
+
+        var index2 = sel2.selectedIndex;
+        var options2 = sel2.options;
+        var op2 = options2[index2];
+
+        editConf(key,op1.value,op2.value);
+    }
+
+
+
+</script>
+<include file="Common/foot" />

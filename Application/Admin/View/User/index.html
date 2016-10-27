@@ -1,0 +1,110 @@
+<include file="Common/head" />
+
+
+<!-- BEGIN SECTION -->
+<section id="container">
+    <include file="Common/header" />
+    <include file="Common/nav" />
+
+    <!-- BEGIN MAIN CONTENT -->
+    <section id="main-content">
+        <!-- BEGIN WRAPPER  -->
+        <section class="wrapper">
+            <!-- BEGIN ROW  -->
+            <div class="row">
+
+                <div class="col-lg-12">
+                    <form id="form" action="__CONTROLLER__/deleteUserM" method="post">
+                        <section class="panel">
+
+                            <header class="panel-heading">
+                                <span class="label label-primary">链接列表</span>
+                           <span class="tools pull-right">
+                           <input type="submit" name="sub" value="批量删除">
+                           </span>
+                            </header>
+
+
+                            <table class="table table-striped table-advance table-hover">
+
+                                <thead>
+                                <tr>
+                                    <th><input type="checkbox" id="checkAll"></th>
+                                    <td>用户ID</td>
+                                    <td>用户名称</td>
+                                    <td>用户邮箱</td>
+                                    <td>用户头像</td>
+                                    <td>用户积分</td>
+                                    <td>注册时间</td>
+                                    <td>是否锁定</td>
+                                    <td>登录时间</td>
+                                    <td>登录IP</td>
+                                    <td>基本操作</td>
+                                </tr>
+                                </thead>
+
+                                <tbody>
+
+                                <volist  name="users" id="ele">
+                                    <tr>
+                                        <td><input type="checkbox" class="check" name="dels[]" value="{$ele.ad_id}"></td>
+                                        <td><a href="#">{$ele.u_id}</a></td>
+                                        <td class="hidden-phone">{$ele.username}</td>
+                                        <td>{$ele.email}</td>
+                                        <td>
+                                            <if condition="$ele['face50'] neq ''">
+                                                <img src="{$ele.face50}">
+                                                <else />
+                                                <span class="label label-info label-mini">NO Pic</span>
+                                            </if>
+                                        </td>
+                                        <td>{$ele.integral}</td>
+                                        <td><?php echo date("Y-m-d H:i:s",$ele['regtime']); ?></td>
+                                        <td>
+                                            <if condition="$ele['islock'] neq 0">
+                                                是
+                                                <else />
+                                                否
+                                            </if>
+                                        </td>
+                                        <td><?php echo date("Y-m-d H:i:s",$ele['logintime']); ?></td>
+                                        <td>{$ele.loginip}</td>
+                                        <td>
+                                            <a href="__CONTROLLER__/edit/u_id/{$ele.u_id}" class="btn btn-success btn-xs">
+                                                <i class="fa fa-edit"></i>
+                                            </a>
+                                            <a  href="__CONTROLLER__/deleteUser/u_id/{$ele.u_id}" class="btn btn-primary btn-xs">
+                                                <i class="fa fa-trash-o"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </volist>
+
+
+
+
+                                </tbody>
+
+
+                            </table>
+
+                        </section>
+                    </form>
+                </div>
+
+            </div>
+            <!-- END ROW  -->
+        </section>
+        <!-- END WRAPPER  -->
+    </section>
+    <!-- END MAIN CONTENT -->
+
+    <include file="Common/footee" />
+</section>
+
+<include file="Common/footer" />
+
+<include file="Common/foot" />
+
+
+

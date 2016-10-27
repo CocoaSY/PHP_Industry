@@ -1,0 +1,65 @@
+<include file="Common/head" />
+
+
+<!-- BEGIN SECTION -->
+<section id="container">
+    <include file="Common/header" />
+    <include file="Common/nav" />
+
+    <!-- BEGIN MAIN CONTENT -->
+    <section id="main-content">
+        <!-- BEGIN WRAPPER  -->
+        <section class="wrapper">
+            <!-- BEGIN ROW  -->
+            <div class="row">
+                <div class="col-lg-6">
+                    <section class="panel">
+
+                        <header class="panel-heading">
+                            <span class="label label-primary">添加管理员</span>
+                           <span class="tools pull-right">
+                           <a href="javascript:;" class="fa fa-chevron-down"></a>
+                           <a href="javascript:;" class="fa fa-times"></a>
+                           </span>
+                        </header>
+
+                        <div class="panel-body">
+                            <form role="form" action="" method="post" id="form">
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">管理员名称</label>
+                                    <input type="text" class="form-control" id="exampleInputEmail1" name="ad_name">
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleInputPassword1">管理员密码</label>
+                                    <input type="password" class="form-control" id="exampleInputPassword1" name="ad_password">
+                                </div>
+                                <button type="submit" class="btn btn-info" onclick="subform()">Submit</button>
+                                <input id="sub" type="submit" name="sub" value="submit" hidden="yes">
+                            </form>
+                        </div>
+                    </section>
+                </div>
+            </div>
+            <!-- END ROW  -->
+        </section>
+        <!-- END WRAPPER  -->
+    </section>
+    <!-- END MAIN CONTENT -->
+
+    <include file="Common/footee" />
+</section>
+
+<include file="Common/footer" />
+<script type="text/javascript" language="JavaScript">
+    function subform(){
+        var sub = document.getElementById("sub");
+        sub.click();
+    }
+
+</script>
+<include file="Common/foot" />
+
+
+
+
+

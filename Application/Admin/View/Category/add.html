@@ -1,0 +1,129 @@
+<include file="Common/head" />
+
+
+<!-- BEGIN SECTION -->
+<section id="container">
+    <include file="Common/header" />
+    <include file="Common/nav" />
+
+    <!-- BEGIN MAIN CONTENT -->
+    <section id="main-content">
+        <!-- BEGIN WRAPPER  -->
+        <section class="wrapper">
+            <!-- BEGIN ROW  -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <section class="panel">
+                        <header class="panel-heading">
+                            <span class="label label-primary">添加栏目</span>
+                           <span class="tools pull-right">
+                           <a href="javascript:;" class="fa fa-chevron-down"></a>
+                           <a href="javascript:;" class="fa fa-times"></a>
+                           </span>
+                        </header>
+                        <div class="panel-body">
+
+
+                            <form role="form" action="" method="post" enctype="multipart/form-data">
+
+
+                                <div class="form-group">
+                                    <label for="cate_name">栏目名称</label>
+                                    <input type="text" class="form-control" id="cate_name" name="cate_name">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="cate_ename">栏目名称(英文)</label>
+                                    <input type="text" class="form-control" id="cate_ename" name="cate_ename">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="cate_type">栏目类型</label>
+                                    <div>
+                                        <volist name="catetypes" id="vo">
+                                            <label class="checkbox-inline">
+                                                <input id="cate_type" type="radio" name="cate_type" value="{$vo.catet_id}" <if condition="$vo['catet_id'] eq 1">checked</if>>   <span>{$vo.catet_name}</span>
+                                            </label>
+                                        </volist>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="cate_nav">作为导航</label>
+                                    <div class="checkbox">
+                                        <label>
+                                            <input id="cate_nav" type="checkbox" name="cate_nav" value="1"> 作为导航
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="cate_keywords">关键字</label>
+                                    <input type="password" class="form-control" id="cate_keywords" name="cate_keywords">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="cate_desc">栏目描述</label>
+                                    <input type="text" class="form-control" id="cate_desc" name="cate_desc">
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label" >上级栏目</label>
+                                    <div>
+                                        <select class="form-control m-bot15" name="cate_pid">
+                                            <option value="0">顶级栏目</option>
+                                            <volist name="cate_pids" id="pid_ele">
+                                                <option value="{$pid_ele['cate_id']}">{$pid_ele['pre']}{$pid_ele['cate_name']}</option>
+                                            </volist>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="cate_pic">图片</label>
+                                    <input type="file" id="cate_pic" name="cate_pic">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="content">栏目内容</label>
+                                    <textarea id="content" name="cate_content"></textarea>
+                                </div>
+
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox"> Check me out
+                                    </label>
+                                </div>
+                                <button type="submit" class="btn btn-info" onclick="subform()">提交</button>
+                                <input id="sub" type="submit" name="sub" value="submit" hidden="yes">
+                            </form>
+
+
+                        </div>
+                    </section>
+                </div>
+            </div>
+            <!-- END ROW  -->
+        </section>
+        <!-- END WRAPPER  -->
+    </section>
+    <!-- END MAIN CONTENT -->
+
+    <include file="Common/footee" />
+</section>
+
+<include file="Common/footer" />
+<script type="text/javascript" language="JavaScript">
+
+    var ue = UE.getEditor('content',{
+        initialFrameWidth:700,
+        initialFrameHeight:200
+    });
+
+    function subform(){
+        var sub = document.getElementById("sub");
+        sub.click();
+    }
+
+</script>
+<include file="Common/foot" />

@@ -1,0 +1,87 @@
+<include file="Common/head" />
+
+
+<!-- BEGIN SECTION -->
+<section id="container">
+    <include file="Common/header" />
+    <include file="Common/nav" />
+
+    <!-- BEGIN MAIN CONTENT -->
+    <section id="main-content">
+        <!-- BEGIN WRAPPER  -->
+        <section class="wrapper">
+            <!-- BEGIN ROW  -->
+            <div class="row">
+                <div class="col-lg-6">
+                    <section class="panel">
+                        <header class="panel-heading">
+                            <span class="label label-primary">添加链接</span>
+                           <span class="tools pull-right">
+                           <a href="javascript:;" class="fa fa-chevron-down"></a>
+                           <a href="javascript:;" class="fa fa-times"></a>
+                           </span>
+                        </header>
+                        <div class="panel-body">
+
+
+                            <form role="form" action="" method="post" enctype="multipart/form-data">
+
+
+                                <div class="form-group">
+                                    <label for="li_title" class="control-label">链接标题</label>
+                                    <input type="text" class="form-control" id="li_title" name="li_title">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="li_url" class="control-label">链接地址</label>
+                                    <input type="text" class="form-control" id="li_url" name="li_url">
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label">是否显示</label>
+                                    <div>
+                                        <input type="radio" name="li_show" value="1">                   <span>显示</span>
+                                        <input type="radio" name="li_show" value="0" checked>           <span>不显示</span>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="li_pic">图片</label>
+                                    <input type="file" id="li_pic" name="li_pic">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="li_desc">链接描述</label>
+                                    <input type="text" class="form-control" id="li_desc" name="li_desc">
+                                </div>
+
+                                <button type="submit" class="btn btn-info" onclick="subform()">提交</button>
+                                <input id="sub" type="submit" name="sub" value="submit" hidden="yes">
+                            </form>
+
+
+                        </div>
+                    </section>
+                </div>
+            </div>
+            <!-- END ROW  -->
+        </section>
+        <!-- END WRAPPER  -->
+    </section>
+    <!-- END MAIN CONTENT -->
+
+    <include file="Common/footee" />
+</section>
+
+<include file="Common/footer" />
+<script type="text/javascript" language="JavaScript">
+    function subform(){
+        var sub = document.getElementById("sub");
+        sub.click();
+    }
+
+</script>
+<include file="Common/foot" />
+
+
+

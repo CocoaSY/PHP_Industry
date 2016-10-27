@@ -1,0 +1,142 @@
+<include file="Common/head" />
+
+
+<!-- BEGIN SECTION -->
+<section id="container">
+    <include file="Common/header" />
+    <include file="Common/nav" />
+
+    <!-- BEGIN MAIN CONTENT -->
+    <section id="main-content">
+        <!-- BEGIN WRAPPER  -->
+        <section class="wrapper">
+            <!-- BEGIN ROW  -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <section class="panel">
+                        <header class="panel-heading">
+                            <span class="label label-primary">添加文章</span>
+                           <span class="tools pull-right">
+                           <a href="javascript:;" class="fa fa-chevron-down"></a>
+                           <a href="javascript:;" class="fa fa-times"></a>
+                           </span>
+                        </header>
+                        <div class="panel-body">
+
+
+                            <form role="form" action="" method="post" enctype="multipart/form-data">
+
+                                <input type="text" name="ar_id" value="{$article.ar_id}" hidden="yes"/>
+
+                                <div class="form-group">
+                                    <label for="ar_title" class="control-label">文章名称</label>
+                                    <input type="text" class="form-control" id="ar_title" name="ar_title" value="{$article.ar_title}">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="ar_author" class="control-label">文章作者</label>
+                                    <input type="text" class="form-control" id="ar_author" name="ar_author" value="{$article.ar_author}">
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label">是否推荐</label>
+                                    <div>
+                                        <input type="radio" name="ar_rem" value="1" <if condition="$article['ar_rem'] eq 1">checked</if> >           <span>推荐</span>
+                                        <input type="radio" name="ar_rem" value="0" <if condition="$article['ar_rem'] eq 0">checked</if> >           <span>不推荐</span>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="ar_keywords" class="control-label">关键字</label>
+                                    <div>
+                                        <input id="ar_keywords" class="form-control" type="text" name="ar_keywords" value="{$article.ar_keywords}">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="ar_desc" class="control-label">文章描述</label>
+                                    <div>
+                                        <input id="ar_desc" class="form-control" type="text" name="ar_desc" value="{$article.ar_desc}">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label" >所属栏目</label>
+                                    <div>
+                                        <select class="form-control m-bot15" name="ar_cateid">
+                                            <option value="0">请选择</option>
+                                            <volist name="cates" id="ele">
+                                                <option value="{$ele['cate_id']}" <if condition="$ele['cate_id'] eq $article['ar_cateid']">selected</if> >{$ele['pre']}{$ele['cate_name']}</option>
+                                            </volist>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="ar_icon">图标</label>
+                                    <select name="ar_icon" id="ar_icon">
+                                        <option value="0">请选择</option>
+                                        <volist name="arIcons" id="ele">
+                                            <option value="{$ele.ari_id}" <if condition="$article.ari_id eq $ele['ari_id']">selected</if> >{$ele.ari_name}</option>
+                                        </volist>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="ar_pic">图片</label>
+                                    <input type="file" id="ar_pic" name="ar_pic">
+                                    <p>
+                                        <if condition="$article['ar_pic'] neq ''">
+                                            <img src="{$article.ar_pic}" width="30" height="30">
+                                            <else />
+                                            暂无缩略图
+                                        </if>
+                                    </p>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="content">文章内容</label>
+                                    <textarea id="content" name="ar_content">{$article.ar_content}</textarea>
+                                </div>
+
+                                <!--<div class="checkbox">-->
+                                <!--<label>-->
+                                <!--<input type="checkbox"> Check me out-->
+                                <!--</label>-->
+                                <!--</div>-->
+                                <button type="submit" class="btn btn-info" onclick="subform()">提交</button>
+                                <input id="sub" type="submit" name="sub" value="submit" hidden="yes">
+                            </form>
+
+
+                        </div>
+                    </section>
+                </div>
+            </div>
+            <!-- END ROW  -->
+        </section>
+        <!-- END WRAPPER  -->
+    </section>
+    <!-- END MAIN CONTENT -->
+
+    <include file="Common/footee" />
+</section>
+
+<include file="Common/footer" />
+<script type="text/javascript" language="JavaScript">
+
+    var ue = UE.getEditor('content',{
+        initialFrameWidth:700,
+        initialFrameHeight:200
+    });
+
+    function subform(){
+        var sub = document.getElementById("sub");
+        sub.click();
+    }
+
+</script>
+<include file="Common/foot" />
+
+
+

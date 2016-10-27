@@ -1,0 +1,115 @@
+
+<!-- CUSTOM -->
+<script src="<?php echo ADMIN_PUB?>/js/Category/index.js" type="text/javascript" language="JavaScript"></script>
+
+<!-- BEGIN JS -->
+<script src="<?php echo ADMIN_PUB ?>/js/bootstrap.min.js" ></script><!-- BOOTSTRAP JS -->
+<script src="<?php echo ADMIN_PUB ?>/js/respond.min.js" ></script><!-- RESPOND JS -->
+
+<script src="<?php echo ADMIN_PUB ?>/js/jquery.nicescroll.js" ></script><!-- NICESCROLL JS -->
+<script src="<?php echo ADMIN_PUB ?>/js/common-scripts.js"></script><!-- BASIC COMMON JS -->
+
+<script src="<?php echo ADMIN_PUB ?>/js/jquery.dcjqaccordion.2.7.js"></script><!-- ACCORDIN JS -->
+<script src="<?php echo ADMIN_PUB ?>/assets/bootstrap-datepicker/js/bootstrap-datepicker.js"></script><!-- BOOTSTRAP DATEPICKER JS  -->
+
+
+
+<script src="<?php echo ADMIN_PUB ?>/js/jquery.scrollTo.min.js" ></script><!-- SCROLLTO JS -->
+
+
+<!-- jQuery数字加减插件 -->
+<script src="<?php echo ADMIN_PUB ?>/assets/fuelux/js/spinner.min.js"></script><!-- FUELUX JS  -->
+<script src="<?php echo ADMIN_PUB ?>/assets/bootstrap-fileupload/bootstrap-fileupload.js"></script><!-- BOOTSTRAP FILEUPLOAD JS  -->
+<!-- Wysihtml5基于Bootstrap的Web在线编辑器 -->
+<script src="<?php echo ADMIN_PUB ?>/assets/bootstrap-wysihtml5/wysihtml5-0.3.0.js"></script><!-- BOOTSTRAP wysihtml5 JS  -->
+<script src="<?php echo ADMIN_PUB ?>/assets/bootstrap-wysihtml5/bootstrap-wysihtml5.js"></script><!-- BOOTSTRAP wysihtml5 JS  -->
+
+<script src="<?php echo ADMIN_PUB ?>/assets/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js"></script><!-- BOOTSTRAP DATETIMEPICKER JS  -->
+<script src="<?php echo ADMIN_PUB ?>/assets/bootstrap-daterangepicker/moment.min.js"></script>
+<script src="<?php echo ADMIN_PUB ?>/assets/bootstrap-daterangepicker/daterangepicker.js"></script><!-- BOOTSTRAP DATERANGEPICKER JS  -->
+<script src="<?php echo ADMIN_PUB ?>/assets/bootstrap-colorpicker/js/bootstrap-colorpicker.js"> </script><!-- BOOTSTRAP COLORPICKER JS  -->
+<script src="<?php echo ADMIN_PUB ?>/assets/bootstrap-timepicker/js/bootstrap-timepicker.js"></script><!-- BOOTSTRAP TIMEPICKER JS  -->
+<script src="<?php echo ADMIN_PUB ?>/assets/jquery-multi-select/js/jquery.multi-select.js"></script><!-- BOOTSTRAP MULTISELECT JS  -->
+<script src="<?php echo ADMIN_PUB ?>/assets/jquery-multi-select/js/jquery.quicksearch.js"></script><!-- BOOTSTRAP MULTISELECT JS  -->
+
+<!-- Bootstrap3响应式后台管理系统模版MeAdmin 表单组件- JS代码网 -->
+<script src="<?php echo ADMIN_PUB ?>/js/advanced-form-components.js" ></script><!-- ADVANCE FORM COMPONENTS PAGE JS  -->
+<!-- 富文本编辑器 CKeditor -->
+<script src="<?php echo ADMIN_PUB ?>/assets/ckeditor/ckeditor.js"></script><!-- CKEDITOR JS  -->
+
+<!-- jQuery线状图插件Sparkline -->
+<script src="<?php echo ADMIN_PUB ?>/js/jquery.sparkline.js"></script><!-- SPARKLINE JS -->
+<script src="<?php echo ADMIN_PUB ?>/js/sparkline-chart.js"></script><!-- SPARKLINE CHART JS -->
+<script src="<?php echo ADMIN_PUB ?>/js/count.js"></script><!-- COUNT JS -->
+<!--Morris-->
+<!-- morris.js是一个轻量级的时间序列javascript类库,是网页显示图表的好工具。 -->
+<script src="<?php echo ADMIN_PUB ?>/assets/morris.js-0.4.3/morris.min.js" ></script><!-- MORRIS JS -->
+<script src="<?php echo ADMIN_PUB ?>/assets/morris.js-0.4.3/raphael-min.js" ></script><!-- MORRIS  JS -->
+<script src="<?php echo ADMIN_PUB ?>/js/chart.js" ></script><!-- CHART JS -->
+
+<!--Calendar-->
+<script src="<?php echo ADMIN_PUB ?>/js/calendar/clndr.js"></script><!-- CALENDER JS -->
+<script src="<?php echo ADMIN_PUB ?>/js/calendar/evnt.calendar.init.js"></script><!-- CALENDER EVENT JS -->
+<script src="<?php echo ADMIN_PUB ?>/js/calendar/moment-2.2.1.js"></script><!-- CALENDER MOMENT JS -->
+<!-- Underscore一个JavaScript实用库，提供了一整套函数式编程的实用功能，但是没有扩展任何JavaScript内置对象。 -->
+<script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script><!-- UNDERSCORE JS -->
+
+<!-- 旋钮插件 -->
+<script src="<?php echo ADMIN_PUB ?>/assets/jquery-knob/js/jquery.knob.js" ></script><!-- JQUERY KNOB JS -->
+<script >
+    //knob
+    $(".knob").knob();
+
+</script>
+
+<!-- END JS -->
+
+
+
+<!-- 百度编辑器 -->
+<!-- 配置文件 -->
+<script type="text/javascript" src="__PUBLIC__/ueditor/ueditor.config.js"></script>
+<!-- 编辑器源码文件 -->
+<script type="text/javascript" src="__PUBLIC__/ueditor/ueditor.all.js"></script>
+<!-- 编辑器语言文件 -->
+<script type="text/javascript" src="__PUBLIC__/ueditor/lang/zh-cn/zh-cn.js"></script>
+
+
+<div class="panel-body">
+    <a id="alert" class="btn btn-danger hidden" data-toggle="modal" href="#myAlert">
+        Alert !
+    </a>
+</div>
+<div class="modal fade" id="myAlert" >
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">消息提示</h4>
+            </div>
+            <div id="msg" class="modal-body">
+                Body goes here...
+            </div>
+            <div class="modal-footer">
+                <button id="dismissMyAlert" data-dismiss="modal" class="btn btn-danger" type="button"> Ok</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" language="JavaScript">
+    var myAlert={
+        alert : $("#alert"),
+        msg : $("#msg"),
+        dismissBtn:$("#dismissMyAlert"),
+        show:function(){
+            this.alert.click();
+        },
+        hide:function(){
+            this.dismissBtn.click();
+        },
+        setMsg:function(msg){
+            this.msg.html(msg);
+        }
+    }
+
+</script>

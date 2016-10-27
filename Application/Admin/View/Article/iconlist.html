@@ -1,0 +1,203 @@
+<include file="Common/head" />
+
+
+<!-- BEGIN SECTION -->
+<section id="container">
+    <include file="Common/header" />
+    <include file="Common/nav" />
+
+    <!-- BEGIN MAIN CONTENT -->
+    <section id="main-content">
+        <!-- BEGIN WRAPPER  -->
+        <section class="wrapper">
+            <!-- BEGIN ROW  -->
+            <div class="row">
+
+                <div class="col-lg-8">
+                    <section class="panel">
+                        <div class="panel-body">
+                            <a class="btn btn-success" data-toggle="modal" href="#addIcon">
+                                添加图标
+                            </a>
+                        </div>
+                    </section>
+                    <form id="form" action="__CONTROLLER__/deleteIconM" method="post">
+                        <section class="panel">
+
+                            <header class="panel-heading">
+                                <span class="label label-primary">配置项列表</span>
+                           <span class="tools pull-right">
+                           <input class="hidden" type="submit" name="sub" value="批量删除">
+                           </span>
+                            </header>
+
+
+                            <table class="table table-striped table-advance table-hover">
+
+                                <thead>
+                                <tr>
+                                    <th><input type="checkbox" id="checkAll" onclick="selAll()"></th>
+                                    <td>ID</td>
+                                    <td>名称</td>
+                                    <td>英文名称</td>
+                                    <td>图标</td>
+                                    <td>类名称</td>
+                                    <td>基本操作</td>
+                                </tr>
+                                </thead>
+
+                                <tbody>
+
+                                <volist  name="icons" id="ele">
+                                    <tr>
+                                        <td><input type="checkbox" class="check" name="dels[]" value="{$ele.ari_id}"></td>
+                                        <td>
+                                            <input style="width: 50px" class="form-control small" oldval="{$ele.ari_id}" value="{$ele.ari_id}" type="text">
+                                        </td>
+                                        <td>{$ele.ari_name}</td>
+                                        <td>{$ele.ari_ename}</td>
+                                        <td><i class="icon-info-blocks fa {$ele.ari_cname}"></i></td>
+                                        <td>{$ele.ari_cname}</td>
+                                        <td>
+                                            <a href="__CONTROLLER__/editIcon/ari_id/{$ele.ari_id}" class="btn btn-success btn-xs">
+                                                <i class="fa fa-edit"></i>
+                                            </a>
+                                            <a  href="__CONTROLLER__/deleteIcon/ari_id/{$ele.ari_id}" class="btn btn-primary btn-xs">
+                                                <i class="fa fa-trash-o"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </volist>
+
+
+
+
+                                </tbody>
+
+
+                            </table>
+
+                        </section>
+                    </form>
+                </div>
+
+            </div>
+            <!-- END ROW  -->
+        </section>
+        <!-- END WRAPPER  -->
+    </section>
+    <!-- END MAIN CONTENT -->
+
+    <include file="Common/footee" />
+</section>
+
+<include file="Common/footer" />
+
+<div class="modal fade" id="addIcon"  >
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">添加图标</h4>
+            </div>
+            <form role="form" action="__CONTROLLER__/addIcon" method="post" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="name" class="control-label">名称</label>
+                        <input type="text" class="form-control" id="name" name="ari_name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ename">英文名称</label>
+                        <input type="text" class="form-control" id="ename" name="ari_ename"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cname" class="control-label">类名称</label>
+                        <input type="text" class="form-control" id="cname" name="ari_cname">
+                    </div>
+
+                    <button id="myIconClose" data-dismiss="modal" class="hidden btn btn-default" type="button">关闭</button>
+                    <button type="button" class="btn btn-info" onclick="subIcon(this.parentElement)">提交</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" language="JavaScript">
+    function selAll(){
+        var forms = document.getElementsByTagName("form");
+        var form = forms[0];
+        var cks = form.getElementsByTagName("input");
+        for(var i=0;i<cks.length;i++){
+            cks[i].check();
+        }
+    }
+
+    var addIconUrl = "__CONTROLLER__/addIcon";
+    function subIcon(aDiv){
+        var ninput = $(aDiv).find("#name");
+        var eninput = $(aDiv).find("#ename");
+        var cninput = $(aDiv).find("#cname");
+        $.post(addIconUrl,{"name":ninput.val(),"ename":eninput.val(),"cname":cninput.val()},function(res){
+            if(res['rs']!=0){
+                var aIcon = res['info'];console.log(aIcon);
+                var tr = document.createElement("tr");
+                var td1 = document.createElement("td");
+//                td1.setAttribute("type","checkbox");
+//                td1.setAttribute("class","check");
+//                td1.setAttribute("name","dels[]");
+//                td1.setAttribute("value",aIcon['ari_id']);
+//                tr.appendChild(td1);
+                $(td1).html("<input type=\"checkbox\" class=\"check\" name=\"dels[]\" value=\""+aIcon['ari_id']+"\">");
+                $(tr).append($(td1));
+                for(var j in  aIcon){
+                    var td = document.createElement("td");
+                    if(j=="ari_id"){
+                        //td.innerHTML = "<input style=\"width: 50px\" class=\"form-control small\" oldval=\""+aIcon[j]+"\" value=\""+aIcon[j]+"\" type=\"text\">";
+                        $(td).html("<input style=\"width: 50px\" class=\"form-control small\" oldval=\""+aIcon[j]+"\" value=\""+aIcon[j]+"\" type=\"text\">");
+                    }else if(j=="ari_cname"){
+                        $(td).html(aIcon[j]);
+                        var tdIconShow = document.createElement("td");
+                        $(tdIconShow).html("<i class=\"icon-info-blocks fa "+aIcon[j]+"\"></i>");
+                        $(tr).append($(tdIconShow));
+                    }else{
+                        //td.innerHTML = aIcon[j];
+                        $(td).html(aIcon[j]);
+                    }
+                    $(tr).append($(td));
+                }
+                var td2 = document.createElement("td");
+                //td2.innerHTML = "<td> <a href=\"__CONTROLLER__/editIcon/ari_id/"+aIcon['ari_id']+"}\" class=\"btn btn-success btn-xs\"> <i class=\"fa fa-edit\"></i> </a> <a  href=\"__CONTROLLER__/deleteIcon/ari_id/"+aIcon['ari_id']+"\" class=\"btn btn-primary btn-xs\"> <i class=\"fa fa-trash-o\"></i> </a> </td>";
+                //tr.appendChild(td2);
+
+                $(td2).html("<a href=\"__CONTROLLER__/editIcon/ari_id/"+aIcon['ari_id']+"}\" class=\"btn btn-success btn-xs\"> <i class=\"fa fa-edit\"></i> </a> <a  href=\"__CONTROLLER__/deleteIcon/ari_id/"+aIcon['ari_id']+"\" class=\"btn btn-primary btn-xs\"> <i class=\"fa fa-trash-o\"></i> </a>");
+                $(tr).append($(td2));
+                $("#myIconClose").click();
+                $(".table").append($(tr));
+
+            }else{
+                myAlert.setMsg(res['msg']);
+                myAlert.show();
+            }
+        });
+
+    }
+
+    var chgidURL = "__CONTROLLER__/chgID";
+    function chgID(chgInput){
+        var oldval = chgInput.getAttribute("oldval");
+        var val = chgInput.value;
+
+        $.post(chgidURL,{"oldid":oldval,"newid":val},function(data){
+            //console.log(data);
+            chgInput.setAttribute("oldval",val);
+            myAlert.setMsg(data['msg']);
+            myAlert.show();
+        });
+
+    }
+
+</script>
+
+<include file="Common/foot" />

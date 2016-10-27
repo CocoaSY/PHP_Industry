@@ -1,0 +1,314 @@
+<include file="Common/head" />
+
+<!-- BEGIN 异步上传文件 -->
+<link href="__PUBLIC__/uploadify/uploadify.css" rel="stylesheet" type="text/css">
+<script src="__PUBLIC__/uploadify/jquery.uploadify.min.js" type="text/javascript" language="JavaScript"></script>
+<!-- END 异步上传文件 -->
+
+<!-- BEGIN SECTION -->
+<section id="container">
+    <include file="Common/header" />
+    <include file="Common/nav" />
+
+    <!-- BEGIN MAIN CONTENT -->
+    <section id="main-content">
+        <!-- BEGIN WRAPPER  -->
+        <section class="wrapper">
+            <!-- BEGIN ROW  -->
+
+            <div class="row">
+
+                <div class="col-lg-12">
+                    <!-- 添加视频 -->
+                    <section class="panel">
+                        <div class="panel-body">
+                            <a class="btn btn-success" data-toggle="modal" href="#addVideo">
+                                添加视频
+                            </a>
+                        </div>
+                    </section>
+
+                    <!-- 视频列表 -->
+                    <form id="form" action="__CONTROLLER__/deleteConfM" method="post">
+                        <section class="panel">
+
+                            <header class="panel-heading">
+                                <span class="label label-primary">视频列表</span>
+                           <span class="tools pull-right">
+                           <input type="submit" name="sub" value="批量删除">
+                           </span>
+                            </header>
+
+
+                            <table class="table table-striped table-advance table-hover">
+
+                                <thead>
+                                <tr>
+                                    <th><input type="checkbox" id="checkAll" onclick="selAll()"></th>
+                                    <td>ID</td>
+                                    <td>名称</td>
+                                    <td>英文名称</td>
+                                    <td>类型</td>
+                                    <td>大小</td>
+                                    <td>基本操作</td>
+                                </tr>
+                                </thead>
+
+                                <tbody>
+
+                                <volist  name="videos" id="ele">
+                                    <tr>
+                                        <td><input type="checkbox" class="check" name="dels[]" value="{$ele.vid}"></td>
+                                        <td>
+                                            <input style="width: 50px" class="form-control small" oldval="{$ele.vid}" value="{$ele.vid}" type="text" onchange="chgID(this)">
+                                        </td>
+                                        <td class="hidden-phone">{$ele.name}</td>
+                                        <td>{$ele.ename}</td>
+                                        <td>{$ele.type}</td>
+                                        <td><?php echo intval($ele['size']/1024/1024); ?>M</td>
+                                        <td>
+                                            <a vid="{$ele.vid}" class="btn btn-success btn-xs" onclick="getVideo(this)">
+                                                <i class="fa fa-edit"></i>
+                                            </a>
+                                            <a vid="{$ele.vid}" class="btn btn-primary btn-xs" onclick="delVideo(this)">
+                                                <i class="fa fa-trash-o"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </volist>
+
+
+
+
+                                </tbody>
+
+
+                            </table>
+
+                        </section>
+                    </form>
+
+                </div>
+
+            </div>
+
+            <!-- END ROW  -->
+        </section>
+        <!-- END WRAPPER  -->
+    </section>
+    <!-- END MAIN CONTENT -->
+
+    <include file="Common/footee" />
+</section>
+
+<include file="Common/footer" />
+
+<script type="text/javascript" language="JavaScript">
+    function selAll(){
+        var forms = document.getElementsByTagName("form");
+        var form = forms[0];
+        var cks = form.getElementsByTagName("input");
+        for(var i=0;i<cks.length;i++){
+            cks[i].check();
+        }
+    }
+
+    var chgidURL = "__CONTROLLER__/chgVideoID";
+    function chgID(chgInput){
+        var oldval = chgInput.getAttribute("oldval");
+        var val = chgInput.value;
+
+        $.post(chgidURL,{"oldid":oldval,"newid":val},function(data){
+            //console.log(data);
+            chgInput.setAttribute("oldval",val);
+            myAlert.setMsg(data['msg']);
+            myAlert.show();
+        });
+
+    }
+
+</script>
+
+<div class="modal fade" id="addVideo"  >
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">添加视频</h4>
+            </div>
+
+            <div class="modal-body">
+
+                <div class="form-group">
+                    <label for="v_name" class="control-label">名称</label>
+                    <input type="text" class="form-control" id="v_name" name="name">
+                </div>
+
+                <div class="form-group">
+                    <label for="v_ename">英文名称</label>
+                    <input type="text" class="form-control" id="v_ename" name="ename"/>
+                </div>
+
+
+                <div class="form-group">
+                    <input id="videoupload" type="file" name="video">
+                </div>
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editVideo"  >
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">添加视频</h4>
+            </div>
+            <form id="updateVideoForm" action="__CONTROLLER__/updateVideo" role="form" method="post" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <input id="e_v_vid" name="vid" class="hidden">
+                    <div class="form-group">
+                        <label for="e_v_name" class="control-label">名称</label>
+                        <input type="text" class="form-control" id="e_v_name" name="name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="e_v_ename">英文名称</label>
+                        <input type="text" class="form-control" id="e_v_ename" name="ename"/>
+                    </div>
+
+                    <div class="form-group">
+                        <span class="btn btn-success fileinput-button"><i class="glyphicon glyphicon-plus"></i>
+                            <span>上传视频</span>
+                            <input type="file" name="video" multiple>
+                        </span>
+                    </div>
+                    <div class="form-group">
+                        <span id="e_v_vedio"></span>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-info" onclick="">提交</button>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" language="JavaScript">
+    var uploadVideoUrl = "__CONTROLLER__/uploadVideo";
+    var info;
+    $(document).ready(function(){
+        console.log("document ready");
+        $('#videoupload').uploadify({
+            swf         : '__PUBLIC__/uploadify/uploadify.swf',
+            method      : "post",
+            uploader    : uploadVideoUrl,
+            buttonText  : "上传视频",
+            onUploadSuccess:function(e,data){
+                alert(data);
+                info = data;
+            }
+
+        });
+    });
+
+
+</script>
+
+<script type="text/javascript" language="JavaScript">
+    var addVideoUrl = "__CONTROLLER__/addVideo";
+    var delVideoUrl = "__CONTROLLER__/delVideo";
+    var videoUrl = "__CONTROLLER__/video";
+    var updateVideoUrl = "__CONTROLLER__/updateVideo";
+
+    function addVideo(){
+        $("#videoupload").ajaxSubmit({
+            type:"post",
+            url:uploadVideoUrl,
+            beforeSubmit:function(){
+
+            },
+            success:function(res){
+                if(res['rs'] == 1){ // 上传成功
+                    // TODO 插入新数据
+                    console.log("上传成功");
+
+                }else{              // 上传失败
+                    console.log("上传失败");
+                    console.log(res['info']);
+                }
+                myAlert.setMsg(res['msg']);
+                myAlert.show();
+                //console.log(res);
+            },
+            resetForm:false,
+            clearForm:false
+        });
+    }
+
+    function getVideo(a){
+        $.post(videoUrl,{"vid":$(a).attr("vid")},function(data){
+            $("#editVideo #e_v_vid").val(data['vid']);
+            $("#editVideo #e_v_name").val(data['name']);
+            $("#editVideo #e_v_ename").val(data['ename']);
+            if(data['path'].length>0){
+                $("#editVideo #e_v_vedio").val(data['path']);
+            }
+            $('#editVideo').modal();
+        });
+
+
+
+
+    }
+
+    function updateVideo(){
+        $("#updateVideoForm").ajaxSubmit({
+            type:"post",
+            url:updateVideoUrl,
+            beforeSubmit:function(){
+                $("#editVideo").modal("hide");
+            },
+            success:function(res){
+                if(res['rs'] == 1){ // 修改成功
+                    // TODO 修改新数据
+
+
+                }else{              // 修改失败
+                    console.log("失败");
+                }
+                myAlert.setMsg(res['msg']);
+                myAlert.show();
+                //console.log(res);
+            },
+            resetForm:false,
+            clearForm:false
+        });
+    }
+
+    function delVideo(a){
+        var vid = $(a).attr("vid");
+        $.post(delVideoUrl,{"vid":vid},function(res){
+            if(res['rs']==1){   // 删除成功
+                $(a).parent().parent().remove();
+            }else{              // 删除失败
+
+            }
+            myAlert.setMsg(res['msg']);
+            myAlert.show();
+        });
+    }
+
+</script>
+
+
+
+
+<include file="Common/foot" />

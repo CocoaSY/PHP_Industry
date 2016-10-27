@@ -1,0 +1,53 @@
+<div class="topbar">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <p class="pull-left hidden-xs">Welcome</p>
+                <p class="pull-right">
+                    <i class="fa fa-phone"></i>
+                    <if condition="count($confs['tel']) neq 0">
+                        Tel No. {$confs['tel'].cf_value}
+                        <else />
+                        Tel No. (+001) 123-456-789
+                    </if>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- start header -->
+<header>
+    <div class="navbar navbar-default navbar-static-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="index.html"><img src="<?php echo HOME_PUB?>/img/logo.png" alt="logo"/></a>
+            </div>
+            <div class="navbar-collapse collapse ">
+                <ul class="nav navbar-nav">
+                    <li><a href="__MODULE__">主页</a></li>
+                    <volist name="navs" id="ele">
+                        <if condition="count($ele['subs']) eq 0">
+                            <li><a href="__MODULE__/{$ele.catet_ename}/index/cate_id/{$ele.cate_id}">{$ele.cate_name}</a></li>
+                            <else />
+                            <li class="dropdown">
+                                <a href="__MODULE__/{$ele.catet_ename}/index/cate_id/{$ele.cate_id}" data-toggle="dropdown" class="dropdown-toggle">{$ele.cate_name}<b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    <volist name="ele.subs" id="ele">
+                                        <li><a href="__MODULE__/{$ele.catet_ename}/index/cate_id/{$ele.cate_id}">{$ele.cate_name}</a></li>
+                                    </volist>
+                                </ul>
+                            </li>
+                        </if>
+                    </volist>
+                    <!--<li class="active"><a href="index.html">Home</a></li>-->
+                </ul>
+            </div>
+        </div>
+    </div>
+</header>
+<!-- end header -->

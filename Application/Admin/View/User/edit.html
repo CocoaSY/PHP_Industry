@@ -1,0 +1,359 @@
+<include file="Common/head" />
+
+
+<!-- BEGIN SECTION -->
+<section id="container">
+    <include file="Common/header" />
+    <include file="Common/nav" />
+
+    <!-- BEGIN MAIN CONTENT -->
+    <section id="main-content">
+        <!-- BEGIN WRAPPER  -->
+        <section class="wrapper">
+
+            <!-- BEGIN ROW  -->
+            <div class="row">
+                <!--用户资料-->
+                <div class="col-lg-6">
+                    <section class="panel">
+                        <header class="panel-heading">
+                            <span class="label label-primary">用户资料</span>
+                           <span class="tools pull-right">
+                           <a href="javascript:;" class="fa fa-chevron-down"></a>
+                           <a href="javascript:;" class="fa fa-times"></a>
+                           </span>
+                        </header>
+                        <div class="panel-body">
+                            <form class="form-horizontal" role="form" action="" method="post">
+                                <input hidden="yes" type="text" name="uid" value="{$user.u_id}">
+                                <div class="form-group">
+                                    <label for="inputNickName" class="col-lg-2 col-sm-2 control-label">昵称</label>
+                                    <div class="col-lg-10">
+                                        <input name="nickname" type="text" class="form-control" id="inputNickName" value="{$user.nickname}">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inputJob" class="col-lg-2 col-sm-2 control-label">职位</label>
+                                    <div class="col-lg-10">
+                                        <input name="job" type="text" class="form-control" id="inputJob" value="{$user.job}">
+                                    </div>
+                                </div>
+                                <!-- Begin 省份 城市 地区-->
+                                <div class="form-group">
+                                    <label class="col-lg-2 col-sm-2 control-label">地址</label>
+                                    <div class="col-lg-3">
+                                        <select id="province" name="province" class="form-control input-sm m-bot15" onchange="provindeChanged(this)">
+                                            <option value="0">省份</option>
+                                            <volist name="provinces" id="ele">
+                                                <option value="{$ele.id}" <if condition="$user['provinceid'] eq $ele['id']">selected</if> >{$ele.name}</option>
+                                            </volist>
+                                        </select>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <select id="city" name="city" class="form-control input-sm m-bot15" onchange="cityChanged(this)">
+                                            <option value="0">城市</option>
+                                            <volist name="citys" id="ele">
+                                                <option value="{$ele.id}" <if condition="$user['cityid'] eq $ele['id']">selected</if> >{$ele.name}</option>
+                                            </volist>
+                                        </select>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <select id="district" name="district" class="form-control input-sm m-bot15">
+                                            <option value="0">地区</option>
+                                            <volist name="districts" id="ele">
+                                                <option value="{$ele.id}" <if condition="$user['districtid'] eq $ele['id']">selected</if> >{$ele.name}</option>
+                                            </volist>
+                                        </select>
+                                    </div>
+                                </div>
+                                <!-- End 省份 城市 地区-->
+                                <div class="form-group">
+                                    <label class="col-lg-2 col-sm-2 control-label">性别</label>
+                                    <div class="col-lg-10">
+                                        <label class="checkbox-inline">
+                                            <input id="sex0" name="sex" value="0" type="radio" <if condition="$user['sex'] eq 0">checked</if> > 保密
+                                        </label>
+                                        <label class="checkbox-inline">
+                                            <input id="sex1" name="sex" value="1" type="radio" <if condition="$user['sex'] eq 1">checked</if> > 男
+                                        </label>
+                                        <label class="checkbox-inline">
+                                            <input id="sex2" name="sex" value="2" type="radio" <if condition="$user['sex'] eq 2">checked</if> > 女
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inputIntro" class="col-lg-2 col-sm-2 control-label">签名</label>
+                                    <div class="col-lg-10">
+                                        <textarea id="inputIntro" name="intro" class="form-control" rows="4">{$user.intro}</textarea>
+                                        <!--<textarea id="inputIntro" name="intro" class="wysihtml5 form-control" rows="4">{$user.intro}</textarea>-->
+                                    </div>
+                                </div>
+                                <input type="text" name="sub" value="1" hidden="yes">
+                                <div class="form-group">
+                                    <div class="col-lg-offset-2 col-lg-10">
+                                        <button type="submit" class="btn btn-danger">保存修改</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </section>
+                    <section class="panel">
+                        <div class="panel-body">
+                            <a class="btn btn-success" data-toggle="modal" href="#myTopic">
+                                发表话题
+                            </a>
+                        </div>
+                    </section>
+                </div>
+
+                <!--修改密码-->
+                <div class="col-lg-6">
+                    <section class="panel">
+                        <header class="panel-heading">
+                            <span class="label label-primary">密码修改</span>
+                           <span class="tools pull-right">
+                           <a href="javascript:;" class="fa fa-chevron-down"></a>
+                           <a href="javascript:;" class="fa fa-times"></a>
+                           </span>
+                        </header>
+                        <div class="panel-body">
+                            <form class="form-horizontal" role="form" action="" method="post">
+                                <input hidden="yes" type="text" name="uid" value="{$user.u_id}">
+                                <div class="form-group">
+                                    <label for="inputPassword" class="col-lg-2 col-sm-2 control-label">新密码</label>
+                                    <div class="col-lg-10">
+                                        <input name="password" type="password" class="form-control" id="inputPassword">
+                                    </div>
+                                </div>
+                                <input type="text" name="sub" value="2" hidden="yes">
+                                <div class="form-group">
+                                    <div class="col-lg-offset-2 col-lg-10">
+                                        <button type="submit" class="btn btn-danger">保存修改</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </section>
+                </div>
+                <!--上传头像-->
+                <div class="col-md-6">
+                    <section class="panel">
+                        <header class="panel-heading">
+                  <span class="label label-primary">
+                    Advanced File Input
+                  </span>
+                  <span class="tools pull-right">
+                    <a href="javascript:;" class="fa fa-chevron-down">
+                    </a>
+                    <a href="javascript:;" class="fa fa-times">
+                    </a>
+                  </span>
+                        </header>
+                        <div class="panel-body">
+                            <form action="" method="post" class="form-horizontal tasi-form" enctype="multipart/form-data">
+                                <input hidden="yes" type="text" name="uid" value="{$user.u_id}">
+                                <div class="form-group last">
+                                    <label class="control-label col-md-2">
+                                        头像
+                                    </label>
+                                    <div class="col-md-4">
+                                        <div class="fileupload fileupload-new" data-provides="fileupload">
+                                            <div class="fileupload-new thumbnail" >
+                                                <if condition="$user['face'] neq ''">
+                                                    <img src="{$user.face}" alt="">
+                                                    <else />
+                                                    <img src="http://www.placehold.it/200x150/EFEFEF/AAAAAA&amp;text=no+image" alt="">
+                                                </if>
+                                            </div>
+                                            <div class="fileupload-preview fileupload-exists thumbnail" ></div>
+                                            <input type="text" name="sub" value="3" hidden="yes">
+                                            <div>
+                                                <span class="btn btn-white btn-file">
+                                                    <span class="fileupload-new"><i class="fa fa-paper-clip"></i>选择图片</span>
+                                                    <span class="fileupload-exists"><i class="fa fa-undo"></i>更改</span>
+                                                    <input name="face" type="file" class="default">
+                                                </span>
+                                                <a href="#" class="btn btn-danger fileupload-exists" data-dismiss="fileupload">
+                                                    <i class="fa fa-trash"></i>移除
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-lg-offset-2 col-lg-10">
+                                        <button type="submit" class="btn btn-danger">上传头像</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </section>
+                </div>
+            </div>
+            <!-- END ROW  -->
+
+
+
+        </section>
+        <!-- END WRAPPER  -->
+    </section>
+    <!-- END MAIN CONTENT -->
+
+    <include file="Common/footee" />
+</section>
+
+<include file="Common/footer" />
+<script type="text/javascript" language="JavaScript">
+
+    var cityurl = "__MODULE__/Location/citys";
+    var districturl = "__MODULE__/Location/districts";
+
+    function provindeChanged($this){
+        var districtSel = document.getElementById("district");
+        districtSel.options = 0;
+        districtSel.innerHTML="<option value=\"0\" selected>地区</option>";
+        $("#district").attr("disabled","yes");
+
+        var index = $this.selectedIndex;
+        var options = $this.options;
+        var option = options[index];
+
+        var citySel = $("#city");
+
+        if(index==0){
+            citySel.attr("disabled","yes");
+        }else{
+            citySel.removeAttr("disabled");
+        }
+
+        $.post(cityurl,{pid:option.value},function($data){
+            var citySelect=document.getElementById('city');
+            citySelect.options = 0;
+            citySelect.innerHTML="<option value=\"0\" selected>城市</option>";
+            if($data.length==0){
+                citySel.attr("disabled","yes");
+            }else{
+                citySel.removeAttr("disabled");
+                for(var i=0;i<$data.length;i++){
+                    var city = $data[i];
+                    var cityOption = document.createElement("option");
+                    cityOption.value=city['id'];
+                    cityOption.innerHTML=city['name'];
+                    citySelect.appendChild(cityOption);
+                }
+            }
+        });
+    }
+
+    function cityChanged($this){
+        var index = $this.selectedIndex;
+        var options = $this.options;
+        var option = options[index];
+
+        var districtSel = $("#district");
+
+        if(index==0){
+            districtSel.attr("disabled","yes");
+        }else{
+            districtSel.removeAttr("disabled");
+        }
+
+        $.post(districturl,{cid:option.value},function($data){
+            var districtSelect=document.getElementById('district');
+            districtSelect.options = 0;
+            districtSelect.innerHTML="<option value=\"0\" selected>地区</option>";
+            if($data.length==0){
+                districtSel.attr("disabled","yes");
+            }else{
+                districtSel.removeAttr("disabled");
+                for(var i=0;i<$data.length;i++){
+                    var district = $data[i];
+                    var districtOption = document.createElement("option");
+                    districtOption.value=district['id'];
+                    districtOption.innerHTML=district['name'];
+                    districtSelect.appendChild(districtOption);
+                }
+            }
+        });
+    }
+</script>
+
+<div class="modal fade" id="myTopic"  >
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">发表话题</h4>
+            </div>
+            <form id="addTopic" class="form-horizontal" role="form" method="post">
+            <div class="modal-body">
+
+                    <input hidden="yes" type="text" name="userid" value="{$user.u_id}">
+                    <div class="form-group">
+                        <label for="inputTopicTitle" class="col-lg-2 col-sm-2 control-label">标题</label>
+                        <div class="col-lg-10">
+                            <input name="topictitle" type="text" class="form-control" id="inputTopicTitle">
+                        </div>
+                    </div>
+                    <!-- Begin 话题分类-->
+                    <div class="form-group">
+                        <label class="col-lg-2 col-sm-2 control-label">分类</label>
+                        <div class="col-lg-3">
+                            <select name="topiccateid" class="form-control input-sm m-bot15" onchange="provindeChanged(this)">
+                                <option value="0">选择分类</option>
+                                <volist name="topiccates" id="ele">
+                                    <option value="{$ele.t_id}">{$ele.name}</option>
+                                </volist>
+                            </select>
+                        </div>
+                    </div>
+                    <!-- End 话题分类-->
+                <div class="form-group">
+                    <label for="inputkeywords" class="col-lg-2 col-sm-2 control-label">关键词</label>
+                    <div class="col-lg-10">
+                        <input name="topickeywords" type="text" class="form-control" id="inputkeywords">
+                    </div>
+                </div>
+                    <div class="form-group">
+                        <label for="inputTags" class="col-lg-2 col-sm-2 control-label">标签</label>
+                        <div class="col-lg-10">
+                            <input name="topictags" type="text" class="form-control" id="inputTags">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputContent" class="col-lg-2 col-sm-2 control-label">内容</label>
+                        <div class="col-lg-10">
+                            <textarea id="inputContent" name="topiccontent" class="form-control" rows="4"></textarea>
+                            <!--<textarea id="inputIntro" name="intro" class="wysihtml5 form-control" rows="4">{$user.intro}</textarea>-->
+                        </div>
+                    </div>
+            </div>
+            <div class="modal-footer">
+                <button id="myTopicClose" data-dismiss="modal" class="btn btn-default" type="button">关闭</button>
+                <button class="btn btn-success" type="button" onclick="addTopic()">提交话题</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" language="JavaScript">
+    var addTopicUrl = "__MODULE__/Topic/addTopic";
+    function addTopic(){
+        var form = $("#addTopic");
+        $.post(addTopicUrl,form.serialize(),function(res){
+            $("#myTopicClose").click();
+            if(res['rs']==1){
+
+            }else{
+
+            }
+            myAlert.setMsg(res['msg']);
+            myAlert.show();
+        });
+    }
+
+
+</script>
+
+<include file="Common/foot" />

@@ -1,0 +1,91 @@
+<include file="Common/head" />
+
+
+<!-- BEGIN SECTION -->
+<section id="container">
+    <include file="Common/header" />
+    <include file="Common/nav" />
+
+    <!-- BEGIN MAIN CONTENT -->
+    <section id="main-content">
+        <!-- BEGIN WRAPPER  -->
+        <section class="wrapper">
+            <!-- BEGIN ROW  -->
+            <div class="row">
+                <div class="col-lg-6">
+                    <section class="panel">
+                        <header class="panel-heading">
+                            <span class="label label-primary">添加配置项</span>
+                           <span class="tools pull-right">
+                           <a href="javascript:;" class="fa fa-chevron-down"></a>
+                           <a href="javascript:;" class="fa fa-times"></a>
+                           </span>
+                        </header>
+                        <div class="panel-body">
+
+
+                            <form role="form" action="" method="post" enctype="multipart/form-data">
+
+                                <input type="text" name="cf_id" value="{$conf.cf_id}" hidden="yes">
+
+                                <div class="form-group">
+                                    <label for="cf_name" class="control-label">网站配置名称</label>
+                                    <input type="text" class="form-control" id="cf_name" name="cf_name" value="{$conf.cf_name}">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="cf_ename">网站配置英文名称</label>
+                                    <input type="text" class="form-control" id="cf_ename" name="cf_ename" value="{$conf.cf_ename}">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="cf_type">网站配置类型</label>
+                                    <div>
+                                        <volist name="conftypes" id="ele">
+                                            &nbsp;
+                                            <input type="radio" id="cf_type" name="cf_type" value="{$ele.cft_id}" <if condition="$ele['cft_id'] eq $conf['cf_type']">checked</if> >
+                                            <span>{$ele.cft_name}</span>
+                                        </volist>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="cf_values" class="control-label">网站配置可选值</label>
+                                    <input type="text" class="form-control" id="cf_values" name="cf_values" value="{$conf.cf_values}">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="cf_value" class="control-label">网站配置默认值</label>
+                                    <input type="text" class="form-control" id="cf_value" name="cf_value" value="{$conf.cf_value}">
+                                </div>
+
+                                <button type="submit" class="btn btn-info" onclick="subform()">提交</button>
+                                <input id="sub" type="submit" name="sub" value="submit" hidden="yes">
+                            </form>
+
+
+                        </div>
+                    </section>
+                </div>
+            </div>
+            <!-- END ROW  -->
+        </section>
+        <!-- END WRAPPER  -->
+    </section>
+    <!-- END MAIN CONTENT -->
+
+    <include file="Common/footee" />
+</section>
+
+<include file="Common/footer" />
+<script type="text/javascript" language="JavaScript">
+    function subform(){
+        var sub = document.getElementById("sub");
+        sub.click();
+    }
+
+</script>
+<include file="Common/foot" />
+
+
+

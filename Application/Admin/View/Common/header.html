@@ -1,0 +1,55 @@
+<!-- BEGIN HEADER -->
+<header class="header white-bg">
+    <!-- SIDEBAR TOGGLE BUTTON -->
+    <div class="sidebar-toggle-box">
+        <div  data-placement="right" class="fa fa-bars tooltips">
+        </div>
+    </div>
+    <!-- SIDEBAR TOGGLE BUTTON  END-->
+    <a href="index.html" class="logo">
+        管理后台
+          <span>
+            管理员:<?php echo session("admin_name");?>
+          </span>
+    </a>
+
+    <!-- START USER LOGIN DROPDOWN  -->
+
+    <div class="top-nav ">
+        <ul class="nav pull-right top-menu">
+            <li>
+                <input type="text" class="form-control search" placeholder="Search">
+            </li>
+            <li class="dropdown">
+                <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                    <img alt="" src="<?php echo ADMIN_PUB;?>/img/avatar1_small.jpg">
+                <span class="username">
+                  <?php echo session("admin_name");?>
+                </span>
+                    <b class="caret">
+                    </b>
+                </a>
+                <ul class="dropdown-menu extended logout">
+                    <li class="log-arrow-up">
+                    </li>
+                    <li>
+                        <a href="/" target="_blank">
+                            <i class="fa fa-bell-o">
+                            </i>
+                            查看前台
+                        </a>
+                    </li>
+                    <li>
+                        <a href="__MODULE__/Login/logout">
+                            <i class="fa fa-key">
+                            </i>
+                            退出登录
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <!-- END USER LOGIN DROPDOWN  -->
+</header>
+<!-- END HEADER -->

@@ -1,0 +1,72 @@
+<include file="Common/head" />
+
+
+<!-- BEGIN SECTION -->
+<section id="container">
+    <include file="Common/header" />
+    <include file="Common/nav" />
+
+    <!-- BEGIN MAIN CONTENT -->
+    <section id="main-content">
+        <!-- BEGIN WRAPPER  -->
+        <section class="wrapper">
+            <!-- BEGIN ROW  -->
+
+            <div class="col-lg-12">
+                <section class="panel">
+                    <header class="panel-heading">
+                        <span class="label label-primary">话题类别</span>
+                           <span class="tools pull-right">
+                           <a href="javascript:;" class="fa fa-chevron-down"></a>
+                           <a href="javascript:;" class="fa fa-times"></a>
+                           </span>
+                    </header>
+                    <table id="tcate" class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>发表者</th>
+                            <th>标题</th>
+                            <th>关键词</th>
+                            <th>标签</th>
+                            <th>类别</th>
+                            <td>基本操作</td>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <volist name="topics" id="ele">
+                            <tr>
+                                <td>{$ele.tp_id}</td>
+                                <td>{$ele.username}</td>
+                                <td>{$ele.title}</td>
+                                <th>{$ele.keywords}</th>
+                                <th>{$ele.tags}</th>
+                                <th>{$ele.name}</th>
+                                <td>
+                                    <a href="__CONTROLLER__/editTopic/t_id/{$ele.t_id}" class="btn btn-success btn-xs">
+                                        <i class="fa fa-edit"></i>
+                                    </a>
+                                    <a  href="__CONTROLLER__/deleteATopic/t_id/{$ele.t_id}" class="btn btn-primary btn-xs">
+                                        <i class="fa fa-trash-o"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        </volist>
+                        </tbody>
+                    </table>
+                </section>
+
+            </div>
+
+            <!-- END ROW  -->
+        </section>
+        <!-- END WRAPPER  -->
+    </section>
+    <!-- END MAIN CONTENT -->
+
+    <include file="Common/footee" />
+</section>
+
+<include file="Common/footer" />
+
+<include file="Common/foot" />

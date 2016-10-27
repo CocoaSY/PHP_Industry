@@ -1,0 +1,374 @@
+<include file="Common/head" />
+
+<!-- BEGIN SECTION -->
+<section id="container">
+    <include file="Common/header" />
+    <include file="Common/nav" />
+
+    <!-- BEGIN MAIN CONTENT -->
+    <section id="main-content">
+        <!-- BEGIN WRAPPER  -->
+        <section class="wrapper">
+            <!-- BEGIN ROW  -->
+
+            <div class="row">
+
+                <div class="col-lg-12">
+
+                    <!-- 添加电影分类 -->
+                    <section class="panel">
+                        <div class="panel-body">
+                            <a class="btn btn-success" data-toggle="modal" href="#addFilmCate">
+                                添加电影分类
+                            </a>
+                        </div>
+                    </section>
+
+                    <form id="form" action="__CONTROLLER__/deleteConfM" method="post">
+                        <section class="panel">
+
+                            <header class="panel-heading">
+                                <span class="label label-primary">电影分类</span>
+                           <span class="tools pull-right">
+                           <input type="submit" name="sub" value="批量删除">
+                           </span>
+                            </header>
+
+
+                            <table class="table table-striped table-advance table-hover">
+
+                                <thead>
+                                <tr>
+                                    <th><input type="checkbox" id="checkAll" onclick="selAll()"></th>
+                                    <td>ID</td>
+                                    <td>分类名称</td>
+                                    <td>英文名称</td>
+                                    <td>缩略图</td>
+                                    <td>基本操作</td>
+                                </tr>
+                                </thead>
+
+                                <tbody>
+
+                                <volist  name="filmcates" id="ele">
+                                    <tr>
+                                        <td><input type="checkbox" class="check" name="dels[]" value="{$ele.cid}"></td>
+                                        <td>
+                                            <input style="width: 50px" class="form-control small" oldval="{$ele.cid}" value="{$ele.cid}" type="text" onchange="chgID(this)">
+                                        </td>
+                                        <td class="hidden-phone">{$ele.name}</td>
+                                        <td>{$ele.ename}</td>
+                                        <td>
+                                            <img src="{$ele.pic50}">
+                                        </td>
+                                        <td>
+                                            <a cid="{$ele.cid}" class="btn btn-success btn-xs" onclick="getFilmCate(this)">
+                                                <i class="fa fa-edit"></i>
+                                            </a>
+                                            <a cid="{$ele.cid}" class="btn btn-primary btn-xs" onclick="delFilmCate(this)">
+                                                <i class="fa fa-trash-o"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </volist>
+
+
+
+
+                                </tbody>
+
+
+                            </table>
+
+                        </section>
+                    </form>
+
+                </div>
+
+            </div>
+
+            <!-- END ROW  -->
+        </section>
+        <!-- END WRAPPER  -->
+    </section>
+    <!-- END MAIN CONTENT -->
+
+    <include file="Common/footee" />
+</section>
+
+<include file="Common/footer" />
+
+<script type="text/javascript" language="JavaScript">
+    function selAll(){
+        var forms = document.getElementsByTagName("form");
+        var form = forms[0];
+        var cks = form.getElementsByTagName("input");
+        for(var i=0;i<cks.length;i++){
+            cks[i].check();
+        }
+    }
+
+    var chgidURL = "__CONTROLLER__/chgFilmCateID";
+    function chgID(chgInput){
+        var oldval = chgInput.getAttribute("oldval");
+        var val = chgInput.value;
+        $.post(chgidURL,{"oldid":oldval,"newid":val},function(data){
+            chgInput.setAttribute("oldval",val);
+            myAlert.setMsg(data['msg']);
+            myAlert.show();
+        });
+
+    }
+
+</script>
+
+<div class="modal fade" id="addFilmCate"  >
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">添加电影分类</h4>
+            </div>
+            <form id="addFilmCategory" role="form" action="__CONTROLLER__/addFilmCate" method="post" enctype="multipart/form-data" target="ifram_sign">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="f_name" class="control-label">分类名称</label>
+                        <input type="text" class="form-control" id="f_name" name="name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="f_ename">英文名称</label>
+                        <input type="text" class="form-control" id="f_ename" name="ename"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="f_desc">描述</label>
+                        <input type="text" class="form-control" id="f_desc" name="desc"/>
+                    </div>
+
+                    <!--上传缩略图-->
+                    <div class="form-group">
+                        <label for="f_pic" class="control-label">缩略图</label>
+                        <div class="panel-body" id="f_pic">
+                            <div class="form-group last">
+                                <div class="col-md-4">
+                                    <div class="fileupload fileupload-new" data-provides="fileupload">
+                                        <div class="fileupload-new thumbnail" >
+                                            <img src="http://www.placehold.it/200x150/EFEFEF/AAAAAA&amp;text=no+image" alt="">
+                                        </div>
+                                        <div class="fileupload-preview fileupload-exists thumbnail" ></div>
+                                        <div>
+                                            <span class="btn btn-white btn-file">
+                                                    <span class="fileupload-new"><i class="fa fa-paper-clip"></i>选择图片</span>
+                                                    <span class="fileupload-exists"><i class="fa fa-undo"></i>更改</span>
+                                                    <input id="filmpic" name="pic" type="file" class="default">
+                                                </span>
+                                            <a href="#" class="btn btn-danger fileupload-exists" data-dismiss="fileupload">
+                                                <i class="fa fa-trash"></i>移除
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button id="myClose" data-dismiss="modal" class="btn btn-default" type="button">关闭</button>
+                        <button type="button" class="btn btn-info" onclick="addFilmCategory()">提交</button>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editFilmCate"  >
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">添加电影分类</h4>
+            </div>
+            <form id="updateFilmCategory" role="form" action="__CONTROLLER__/editFilmCate" method="post" enctype="multipart/form-data" target="ifram_sign">
+                <div class="modal-body">
+                    <input id="e_f_cid" type="text" class="form-control hidden" hidden="yes" name="cid">
+                    <div class="form-group">
+                        <label for="e_f_name" class="control-label">分类名称</label>
+                        <input type="text" class="form-control" id="e_f_name" name="name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="e_f_ename">英文名称</label>
+                        <input type="text" class="form-control" id="e_f_ename" name="ename"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="e_f_desc">描述</label>
+                        <input type="text" class="form-control" id="e_f_desc" name="desc"/>
+                    </div>
+
+                    <!--上传头像-->
+                    <div class="form-group">
+                        <label for="e_f_pic" class="control-label">缩略图</label>
+                        <div class="panel-body" id="e_f_pic">
+                            <!--<input id="e_filmpic" name="pic" type="file" class="default" multiple="true">-->
+
+
+                            <div class="form-group last">
+                                <div class="col-md-4">
+                                    <div class="fileupload fileupload-new" data-provides="fileupload">
+                                        <div class="fileupload-new thumbnail" >
+                                            <img src="http://www.placehold.it/200x150/EFEFEF/AAAAAA&amp;text=no+image" alt="">
+                                        </div>
+                                        <div class="fileupload-preview fileupload-exists thumbnail" ></div>
+                                        <div>
+                                            <span class="btn btn-white btn-file">
+                                                    <span class="fileupload-new"><i class="fa fa-paper-clip"></i>选择图片</span>
+                                                    <span class="fileupload-exists"><i class="fa fa-undo"></i>更改</span>
+                                                    <input id="e_filmpic" name="pic" type="file" class="default">
+                                                </span>
+                                            <a href="#" class="btn btn-danger fileupload-exists" data-dismiss="fileupload">
+                                                <i class="fa fa-trash"></i>移除
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button id="e_myClose" data-dismiss="modal" class="btn btn-default" type="button">关闭</button>
+                        <button type="button" class="btn btn-info" onclick="updateFilmCate()">提交</button>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript" language="JavaScript">
+    // 添加电影分类
+    var addFilmCateUrl = "__CONTROLLER__/addFilmCate";
+    function addFilmCategory(){
+        var form = $("#addFilmCategory");
+        form.ajaxSubmit({
+            //dataType:'script',
+            type:'post',
+            url: addFilmCateUrl,
+            beforeSubmit: function(){
+                $("#myClose").click();
+                myAlert.setMsg("资料上传中...");
+                myAlert.show();
+            },
+            success: function(res){
+                if(res['rs'] == 1){ // 成功
+                    //console.log(res);
+                    // TODO 插入新数据
+                    var aFilmCate = res["info"];
+                    //console.log(aFilmCate.name);
+                    var tables = document.getElementsByTagName("table");
+                    var tbodys = tables[0].getElementsByTagName("tbody");
+                    var tbody = tbodys[0];
+
+                    var tr = document.createElement("tr");
+                    var td1 = document.createElement("td");
+                    td1.innerHTML = "<input type=\"checkbox\" class=\"check\" name=\"dels[]\" value=\""+aFilmCate.cid+"\">";
+                    var td2 = document.createElement("td");
+                    td2.innerHTML = "<input style=\"width: 50px\" class=\"form-control small\" oldval=\""+aFilmCate.cid+"\" value=\""+aFilmCate.cid+"\" type=\"text\" onchange=\"chgID(this)\">";
+                    var td3 = document.createElement("td");
+                    td3.innerHTML = aFilmCate.name;
+                    var td4 = document.createElement("td");
+                    td4.innerHTML = aFilmCate.ename;
+                    var td5 = document.createElement("td");
+                    td5.innerHTML = "<img src=\""+aFilmCate.pic50+"\">";
+                    var td6 = document.createElement("td");
+                    td6.innerHTML = "<a cid=\""+aFilmCate.cid+"\" class=\"btn btn-success btn-xs\" onclick=\"getFilmCate(this)\"> <i class=\"fa fa-edit\"></i> </a> <a cid=\""+aFilmCate.cid+"\" class=\"btn btn-primary btn-xs\" onclick=\"delFilmCate(this)\"> <i class=\"fa fa-trash-o\"></i> </a>";
+
+                    tr.appendChild(td1);
+                    tr.appendChild(td2);
+                    tr.appendChild(td3);
+                    tr.appendChild(td4);
+                    tr.appendChild(td5);
+                    tr.appendChild(td6);
+
+                    tbody.appendChild(tr);
+
+                }else{              // 失败
+                    console.log("失败");
+                }
+                myAlert.setMsg(res['msg']);
+            },
+            resetForm: false,
+            clearForm: false
+        });
+
+    }
+
+    // 获取某个电影分类信息
+    var filmCateUrl = "__CONTROLLER__/filmCate";
+    function getFilmCate(a){
+        console.log($(a).attr("cid"));
+        $.post(filmCateUrl,{"cid":$(a).attr("cid")},function(data){
+            $("#editFilmCate #e_f_cid").val(data['cid']);
+            $("#editFilmCate #e_f_name").val(data['name']);
+            $("#editFilmCate #e_f_ename").val(data['ename']);
+            $("#editFilmCate #e_f_desc").val(data['description']);
+            if(data['pic'].length>0){
+                $("#editFilmCate img").attr("src",data['pic']);
+            }
+            $('#editFilmCate').modal();
+        });
+    }
+
+    // 更新某个电影分类信息
+    var updateFilmCateUrl = "__CONTROLLER__/updateFilmCate";
+    function updateFilmCate(){
+        var form = $("#updateFilmCategory");
+        form.ajaxSubmit({
+            //dataType:'script',
+            type:'post',
+            url: updateFilmCateUrl,
+            beforeSubmit: function(){
+                $("#myClose").click();
+                myAlert.setMsg("资料上传中...");
+                myAlert.show();
+            },
+            success: function(res){
+                $("#editFilmCate").modal('hide');
+                if(res['rs'] == 1){ // 成功
+                    // TODO 更新新数据
+
+
+                }else{              // 失败
+                    console.log("失败");
+                }
+                myAlert.setMsg(res['msg']);
+            },
+            resetForm: false,
+            clearForm: false
+        });
+    }
+
+    var delFilmCateUrl = "__CONTROLLER__/delFilmCate";
+    function delFilmCate(a){
+        $.post(delFilmCateUrl,{"cid":$(a).attr("cid")},function(data){
+            if(data['rs'] == 1){
+                $(a).parent().parent().remove();
+            }else{
+
+            }
+
+            myAlert.setMsg(data['msg']);
+            myAlert.show();
+        });
+    }
+
+</script>
+
+<include file="Common/foot" />

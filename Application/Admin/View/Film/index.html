@@ -1,0 +1,409 @@
+<include file="Common/head" />
+
+
+<!-- BEGIN SECTION -->
+<section id="container">
+    <include file="Common/header" />
+    <include file="Common/nav" />
+
+    <!-- BEGIN MAIN CONTENT -->
+    <section id="main-content">
+        <!-- BEGIN WRAPPER  -->
+        <section class="wrapper">
+            <!-- BEGIN ROW  -->
+
+            <div class="row">
+
+                <div class="col-lg-12">
+                    <section class="panel">
+                        <div class="panel-body">
+                            <a class="btn btn-success" data-toggle="modal" href="#addFilm">
+                                添加电影
+                            </a>
+                        </div>
+                    </section>
+
+                    <form id="form" action="__CONTROLLER__/deleteConfM" method="post">
+                        <section class="panel">
+
+                            <header class="panel-heading">
+                                <span class="label label-primary">电影列表</span>
+                           <span class="tools pull-right">
+                           <input type="submit" name="sub" value="批量删除">
+                           </span>
+                            </header>
+
+
+                            <table class="table table-striped table-advance table-hover">
+
+                                <thead>
+                                <tr>
+                                    <th><input type="checkbox" id="checkAll" onclick="selAll()"></th>
+                                    <td>ID</td>
+                                    <td>名称</td>
+                                    <td>英文名称</td>
+                                    <td>缩略图</td>
+                                    <td>类别</td>
+                                    <td>播放源</td>
+                                    <td>基本操作</td>
+                                </tr>
+                                </thead>
+
+                                <tbody>
+
+                                <volist  name="films" id="ele">
+                                    <tr>
+                                        <td><input type="checkbox" class="check" name="dels[]" value="{$ele.fid}"></td>
+                                        <td>
+                                            <input style="width: 50px" class="form-control small" oldval="{$ele.fid}" value="{$ele.fid}" type="text" onchange="chgID(this)">
+                                        </td>
+                                        <td class="hidden-phone">{$ele.name}</td>
+                                        <td>{$ele.ename}</td>
+                                        <td><img src="{$ele.pic50}"></td>
+                                        <td>
+                                            <?php for($i=0;$i<count($cates);$i++){          ?>
+                                            <?php   if($cates[$i]["cid"]==$ele['cid']){     ?>
+                                            <?php       echo $cates[$i]['name'];            ?>
+                                            <?php   }                                       ?>
+                                            <?php }                                         ?>
+                                        </td>
+                                        <td>
+                                            <?php for($i=0;$i<count($videos);$i++){          ?>
+                                            <?php   if($videos[$i]["vid"]==$ele['video']){   ?>
+                                            <?php       echo $videos[$i]['name'];            ?>
+                                            <?php   }                                        ?>
+                                            <?php }                                          ?>
+                                        </td>
+                                        <td>
+                                            <a fid="{$ele.fid}" onclick="film(this)" class="btn btn-success btn-xs">
+                                                <i class="fa fa-edit"></i>
+                                            </a>
+                                            <a fid="{$ele.fid}" onclick="delFilm(this)" class="btn btn-primary btn-xs">
+                                                <i class="fa fa-trash-o"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </volist>
+
+
+
+
+                                </tbody>
+
+
+                            </table>
+
+                        </section>
+                    </form>
+                </div>
+
+            </div>
+
+            <!-- END ROW  -->
+        </section>
+        <!-- END WRAPPER  -->
+    </section>
+    <!-- END MAIN CONTENT -->
+
+    <include file="Common/footee" />
+</section>
+
+<include file="Common/footer" />
+
+<script type="text/javascript" language="JavaScript">
+    function selAll(){
+        var forms = document.getElementsByTagName("form");
+        var form = forms[0];
+        var cks = form.getElementsByTagName("input");
+        for(var i=0;i<cks.length;i++){
+            cks[i].check();
+        }
+    }
+
+    var chgidURL = "__CONTROLLER__/chgFilmID";
+    function chgID(chgInput){
+        var oldval = chgInput.getAttribute("oldval");
+        var val = chgInput.value;
+
+        $.post(chgidURL,{"oldid":oldval,"newid":val},function(data){
+            //console.log(data);
+            chgInput.setAttribute("oldval",val);
+            myAlert.setMsg(data['msg']);
+            myAlert.show();
+        });
+
+    }
+
+</script>
+
+<div class="modal fade" id="addFilm"  >
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">添加电影</h4>
+            </div>
+            <form id="addFilmForm" role="form" action="__CONTROLLER__/addFilm" method="post" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="f_name" class="control-label">名称</label>
+                        <input type="text" class="form-control" id="f_name" name="name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="f_ename">英文名称</label>
+                        <input type="text" class="form-control" id="f_ename" name="ename"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="f_type">类型</label>
+                        <div>
+                            <volist name="cates" id="ele">
+                                &nbsp;
+                                <input type="radio" id="f_type" name="type" value="{$ele.cid}" <if condition="$ele['cid'] eq 1">checked</if> >
+                                <span>{$ele.name}</span>
+                            </volist>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="f_desc" class="control-label">描述</label>
+                        <input type="text" class="form-control" id="f_desc" name="desc">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="f_video" class="control-label">播放源</label>
+                        <div id="f_video">
+                            <select name="video">
+                                <option value="0">请选择视频</option>
+                                <volist name="videos" id="ele">
+                                    <option value="{$ele.vid}">{$ele.name}</option>
+                                </volist>
+                            </select>
+                        </div>
+
+                    </div>
+
+                    <div class="form-group">
+                        <label for="f_pic" class="control-label">缩略图</label>
+                        <div class="panel-body" id="f_pic">
+                            <div class="form-group last">
+                                <div class="col-md-4">
+                                    <div class="fileupload fileupload-new" data-provides="fileupload">
+                                        <div class="fileupload-new thumbnail" >
+                                            <img src="http://www.placehold.it/200x150/EFEFEF/AAAAAA&amp;text=no+image" alt="">
+                                        </div>
+                                        <div class="fileupload-preview fileupload-exists thumbnail" ></div>
+                                        <div>
+                                            <span class="btn btn-white btn-file">
+                                                    <span class="fileupload-new"><i class="fa fa-paper-clip"></i>选择图片</span>
+                                                    <span class="fileupload-exists"><i class="fa fa-undo"></i>更改</span>
+                                                    <input id="filmpic" name="pic" type="file" class="default">
+                                                </span>
+                                            <a href="#" class="btn btn-danger fileupload-exists" data-dismiss="fileupload">
+                                                <i class="fa fa-trash"></i>移除
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-info" onclick="addFilm()">提交</button>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editFilm"  >
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">添加电影</h4>
+            </div>
+            <form id="updateFilmForm" role="form" action="__CONTROLLER__/addFilm" method="post" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <input id="e_f_fid" name="fid" class="hidden">
+                    <div class="form-group">
+                        <label for="e_f_name" class="control-label">名称</label>
+                        <input type="text" class="form-control" id="e_f_name" name="name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="e_f_ename">英文名称</label>
+                        <input type="text" class="form-control" id="e_f_ename" name="ename"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="e_f_cid">类型</label>
+                        <div id="e_f_cid">
+                            <volist name="cates" id="ele">
+                                &nbsp;
+                                <input type="radio" name="type" value="{$ele.cid}">
+                                <span>{$ele.name}</span>
+                            </volist>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="e_f_desc" class="control-label">描述</label>
+                        <input type="text" class="form-control" id="e_f_desc" name="desc">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="f_video" class="control-label">播放源</label>
+                        <div>
+                            <select id="e_f_video" name="video">
+                                <option value="0">请选择视频</option>
+                                <volist name="videos" id="ele">
+                                    <option value="{$ele.vid}">{$ele.name}</option>
+                                </volist>
+                            </select>
+                        </div>
+
+                    </div>
+
+                    <div class="form-group">
+                        <label for="f_pic" class="control-label">缩略图</label>
+                        <div class="panel-body">
+                            <div class="form-group last">
+                                <div class="col-md-4">
+                                    <div class="fileupload fileupload-new" data-provides="fileupload">
+                                        <div class="fileupload-new thumbnail" >
+                                            <img src="http://www.placehold.it/200x150/EFEFEF/AAAAAA&amp;text=no+image" alt="">
+                                        </div>
+                                        <div class="fileupload-preview fileupload-exists thumbnail" ></div>
+                                        <div>
+                                            <span class="btn btn-white btn-file">
+                                                    <span class="fileupload-new"><i class="fa fa-paper-clip"></i>选择图片</span>
+                                                    <span class="fileupload-exists"><i class="fa fa-undo"></i>更改</span>
+                                                    <input name="pic" type="file" class="default">
+                                                </span>
+                                            <a href="#" class="btn btn-danger fileupload-exists" data-dismiss="fileupload">
+                                                <i class="fa fa-trash"></i>移除
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-info" onclick="updateFilm()">提交</button>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" language="JavaScript">
+
+    var addFilmUrl = "__CONTROLLER__/addFilm";
+    var filmUrl = "__CONTROLLER__/film";
+    var updateFilmUrl = "__CONTROLLER__/updateFilm";
+    var delFilmUrl = "__CONTROLLER__/delFilm";
+
+    function addFilm(){
+        $("#addFilmForm").ajaxSubmit({
+            type:"post",
+            url:addFilmUrl,
+            beforeSubmit:function(){
+                $("#addFilm").modal("hide");
+            },
+            success:function(res){
+                if(res['rs'] == 1){ // 上传成功
+                    // TODO 插入新数据
+
+
+                }else{              // 上传失败
+                    console.log("失败");
+                }
+                myAlert.setMsg(res['msg']);
+                myAlert.show();
+                //console.log(res);
+            },
+            resetForm:false,
+            clearForm:false
+        });
+    }
+
+    function film(a){
+        $.post(filmUrl,{"fid":$(a).attr("fid")},function(data){
+            console.log(data);
+            $("#editFilm #e_f_fid").val(data['fid']);
+            $("#editFilm #e_f_name").val(data['name']);
+            $("#editFilm #e_f_ename").val(data['ename']);
+            $("#editFilm #e_f_desc").val(data['description']);
+
+            var cidDiv = document.getElementById("e_f_cid");
+            var cidRadios = cidDiv.getElementsByTagName("input");
+            for(var i=0;i<cidRadios.length;i++){
+                var cidRadio = cidRadios[i];
+                if(data['cid']==$(cidRadio).val()){
+                    $(cidRadio).attr("checked","yes");
+                }
+            }
+
+            var videoSelect = document.getElementById("e_f_video");
+            var videoOptions = videoSelect.getElementsByTagName("option");
+            for(var j=0;j<videoOptions.length;j++){
+                var videoOption = videoOptions[j];
+                if(data['video']==$(videoOption).val()){
+                    videoSelect.selectedIndex = j;
+                }
+            }
+
+            if(data['pic'].length>0){
+                $("#editFilm img").attr("src",data['pic']);
+            }
+            $('#editFilm').modal();
+        });
+    }
+
+    function updateFilm(){
+        $("#updateFilmForm").ajaxSubmit({
+            type:"post",
+            url:updateFilmUrl,
+            beforeSubmit:function(){
+                $("#editFilm").modal("hide");
+            },
+            success:function(res){
+                if(res['rs'] == 1){ // 修改成功
+                    // TODO 修改新数据
+
+
+                }else{              // 修改失败
+                    console.log("失败");
+                }
+                myAlert.setMsg(res['msg']);
+                myAlert.show();
+                //console.log(res);
+            },
+            resetForm:false,
+            clearForm:false
+        });
+    }
+
+    function delFilm(a){
+        $.post(delFilmUrl,{"fid":$(a).attr("fid")},function(data){
+            if(data['rs'] == 1){
+                $(a).parent().parent().remove();
+            }else{
+
+            }
+
+            myAlert.setMsg(data['msg']);
+            myAlert.show();
+        });
+    }
+
+</script>
+
+<include file="Common/foot" />

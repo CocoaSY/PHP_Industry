@@ -1,0 +1,360 @@
+<include file="Common/head" />
+
+
+<!-- BEGIN SECTION -->
+<section id="container">
+    <include file="Common/header" />
+    <include file="Common/nav" />
+
+    <!-- BEGIN MAIN CONTENT -->
+    <section id="main-content">
+        <!-- BEGIN WRAPPER  -->
+        <section class="wrapper">
+            <!-- BEGIN ROW  -->
+            <div class="row">
+
+                <div class="col-lg-8">
+
+
+                    <!-- 添加横幅 -->
+                    <section class="panel">
+                        <div class="panel-body">
+                            <a class="btn btn-success" data-toggle="modal" href="#addBanner">
+                                添加横幅
+                            </a>
+                        </div>
+                    </section>
+
+                    <form id="form" action="__CONTROLLER__/deleteBannerM" method="post">
+
+                        <section class="panel">
+
+                            <header class="panel-heading">
+                                <span class="label label-primary">横幅列表</span>
+                                <span class="tools pull-right">
+                                <input type="submit" name="sub" value="批量删除">
+                                </span>
+                            </header>
+
+
+                            <table class="table table-striped table-advance table-hover">
+
+                                <thead>
+                                <tr>
+                                    <th><input type="checkbox" id="checkAll" onclick="selAll()"></th>
+                                    <th>横幅ID</th>
+                                    <th>横幅名称</th>
+                                    <th>英文名称</th>
+                                    <th>横幅图片</th>
+                                    <th>是否显示</th>
+                                    <th>基本操作</th>
+                                </tr>
+                                </thead>
+
+                                <tbody>
+
+                                <volist  name="banners" id="ele">
+                                    <tr>
+                                        <td><input type="checkbox" class="check" name="dels[]" value="{$ele.bn_id}"></td>
+                                        <td>
+                                            <input style="width: 50px" class="form-control small" oldval="{$ele.bn_id}" value="{$ele.bn_id}" type="text" onchange="updateID.chgID(this,'__CONTROLLER__/chgBannerID')">
+                                        </td>
+                                        <td class="hidden-phone">{$ele.bn_name}</td>
+                                        <td class="hidden-phone">{$ele.bn_ename}</td>
+                                        <td>
+                                            <if condition="$ele['bn_pic'] neq ''">
+                                                <img src="{$ele.bn_pic}" width="30" height="30">
+                                                <else />
+                                                <span class="label label-info label-mini">NO Pic</span>
+                                            </if>
+                                        </td>
+                                        <td>
+                                            <if condition="$ele['bn_show'] eq 1">
+                                                是
+                                                <else />
+                                                否
+                                            </if>
+                                        </td>
+                                        <td>
+                                            <a bid="{$ele.bn_id}" onclick="getBanner(this)" class="btn btn-success btn-xs">
+                                                <i class="fa fa-edit"></i>
+                                            </a>
+                                            <a bid="{$ele.bn_id}" onclick="delBanner(this)" class="btn btn-primary btn-xs">
+                                                <i class="fa fa-trash-o"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </volist>
+
+
+
+
+                                </tbody>
+
+
+                            </table>
+
+                        </section>
+                    </form>
+                </div>
+
+            </div>
+            <!-- END ROW  -->
+        </section>
+        <!-- END WRAPPER  -->
+    </section>
+    <!-- END MAIN CONTENT -->
+
+    <include file="Common/footee" />
+</section>
+
+
+<include file="Common/footer" />
+
+<div class="modal fade" id="addBanner"  >
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">添加横幅</h4>
+            </div>
+
+            <div class="modal-body">
+                <form id="addBannerForm" role="form" action="#" method="post" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="bn_name">横幅名称</label>
+                        <input type="text" class="form-control" id="bn_name" name="bn_name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="bn_ename">横幅英文名称</label>
+                        <input type="text" class="form-control" id="bn_ename" name="bn_ename">
+                    </div>
+
+
+                    <div class="form-group">
+                        <label class="control-label">图片</label>
+                        <div class="panel-body">
+                            <div class="form-group last">
+                                <div class="col-md-4">
+                                    <div class="fileupload fileupload-new" data-provides="fileupload">
+                                        <div class="fileupload-new thumbnail" >
+                                            <img src="http://www.placehold.it/200x150/EFEFEF/AAAAAA&amp;text=no+image" alt="">
+                                        </div>
+                                        <div class="fileupload-preview fileupload-exists thumbnail" ></div>
+                                        <div>
+                                            <span class="btn btn-white btn-file">
+                                                    <span class="fileupload-new"><i class="fa fa-paper-clip"></i>选择图片</span>
+                                                    <span class="fileupload-exists"><i class="fa fa-undo"></i>更改</span>
+                                                    <input id="bn_pic" name="pic" type="file" class="default">
+                                                </span>
+                                            <a href="#" class="btn btn-danger fileupload-exists" data-dismiss="fileupload">
+                                                <i class="fa fa-trash"></i>移除
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="bn_desc">横幅描述</label>
+                        <textarea class="form-control" id="bn_desc" name="bn_desc"></textarea>
+                    </div>
+
+                    <div class="checkbox">
+                        <label>
+                            <input name="bn_show" type="checkbox" checked> 是否显示
+                        </label>
+                    </div>
+
+                </form>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-info" onclick="addBanner()">提交</button>
+                </div>
+
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editBanner"  >
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">添加横幅</h4>
+            </div>
+
+            <div class="modal-body">
+                <form id="editBannerForm" role="form" action="#" method="post" enctype="multipart/form-data">
+                    <input id="e_bn_id" name="bn_id" class="hidden">
+                    <div class="form-group">
+                        <label for="bn_name">横幅名称</label>
+                        <input type="text" class="form-control" id="e_bn_name" name="bn_name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="bn_ename">横幅英文名称</label>
+                        <input type="text" class="form-control" id="e_bn_ename" name="bn_ename">
+                    </div>
+
+
+                    <div class="form-group">
+                        <label class="control-label">图片</label>
+                        <div class="panel-body">
+                            <div class="form-group last">
+                                <div class="col-md-4">
+                                    <div class="fileupload fileupload-new" data-provides="fileupload">
+                                        <div class="fileupload-new thumbnail" >
+                                            <img src="http://www.placehold.it/200x150/EFEFEF/AAAAAA&amp;text=no+image" alt="">
+                                        </div>
+                                        <div class="fileupload-preview fileupload-exists thumbnail" ></div>
+                                        <div>
+                                            <span class="btn btn-white btn-file">
+                                                    <span class="fileupload-new"><i class="fa fa-paper-clip"></i>选择图片</span>
+                                                    <span class="fileupload-exists"><i class="fa fa-undo"></i>更改</span>
+                                                    <input name="pic" type="file" class="default">
+                                                </span>
+                                            <a href="#" class="btn btn-danger fileupload-exists" data-dismiss="fileupload">
+                                                <i class="fa fa-trash"></i>移除
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="bn_desc">横幅描述</label>
+                        <textarea class="form-control" id="e_bn_desc" name="bn_desc"></textarea>
+                    </div>
+
+                    <div class="checkbox">
+                        <label>
+                            <input id="e_bn_show" name="bn_show" type="checkbox"> 是否显示
+                        </label>
+                    </div>
+
+                </form>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-info" onclick="updateBanner()">提交</button>
+                </div>
+
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" language="JavaScript">
+    function selAll(){
+        var forms = document.getElementsByTagName("form");
+        var form = forms[0];
+        var cks = form.getElementsByTagName("input");
+        for(var i=0;i<cks.length;i++){
+            cks[i].check();
+        }
+    }
+
+</script>
+
+<script type="text/javascript" language="JavaScript">
+
+    var addBannerUrl = "__CONTROLLER__/addBanner";
+    function addBanner(){
+        $("#addBannerForm").ajaxSubmit({
+            type:'post',
+            url: addBannerUrl,
+            beforeSubmit: function(){
+                $("#addBanner").modal("hide");
+                myAlert.setMsg("数据上传中...");
+                myAlert.show();
+            },
+            success: function(res){
+                if(res['rs'] == 1){ // 成功
+                    // TODO 插入新数据
+
+
+                }else{              // 失败
+                    console.log("失败");
+                }
+                myAlert.setMsg(res['msg']);
+            },
+            resetForm: false,
+            clearForm: false
+        });
+
+    }
+
+    var getBannerUrl = "__CONTROLLER__/getBanner";
+    function getBanner(a){
+        $.post(getBannerUrl,{"bid":$(a).attr("bid")},function(data){
+            $("#editBanner #e_bn_id").val(data['bn_id']);
+            $("#editBanner #e_bn_name").val(data['bn_name']);
+            $("#editBanner #e_bn_ename").val(data['bn_ename']);
+            $("#editBanner #e_bn_desc").val(data['bn_desc']);
+            if(data['bn_show'] == 1){
+                $("#editBanner #e_bn_show").prop('checked',true);
+            }else{
+                $("#editBanner #e_bn_show").prop('checked',false);
+            }
+            if(data['bn_pic'].length>0){
+                $("#editBanner img").attr("src",data['bn_pic']);
+            }
+            $('#editBanner').modal();
+        });
+    }
+
+    var delBannerUrl = "__CONTROLLER__/delBanner";
+    function delBanner(a){
+        $.post(delBannerUrl,{"bid":$(a).attr("bid")},function(data){
+            if(data['rs'] == 1){
+                $(a).parent().parent().remove();
+            }else{
+
+            }
+            myAlert.setMsg(data['msg']);
+            myAlert.show();
+        });
+    }
+
+    var updateBannerUrl = "__CONTROLLER__/updateBanner";
+    function updateBanner(){
+        $("#editBannerForm").ajaxSubmit({
+            type:'post',
+            url: updateBannerUrl,
+            beforeSubmit: function(){
+                $("#editBanner").modal("hide");
+                myAlert.setMsg("数据更新中...");
+                myAlert.show();
+            },
+            success: function(res){
+                if(res['rs'] == 1){ // 成功
+                    // TODO 插入新数据
+
+
+                }else{              // 失败
+                    console.log("失败");
+                }
+                myAlert.setMsg(res['msg']);
+            },
+            resetForm: false,
+            clearForm: false
+        });
+    }
+
+
+</script>
+
+
+
+
+<include file="Common/foot" />

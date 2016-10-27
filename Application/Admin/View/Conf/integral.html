@@ -1,0 +1,79 @@
+<include file="Common/head" />
+
+
+<!-- BEGIN SECTION -->
+<section id="container">
+    <include file="Common/header" />
+    <include file="Common/nav" />
+
+    <!-- BEGIN MAIN CONTENT -->
+    <section id="main-content">
+        <!-- BEGIN WRAPPER  -->
+        <section class="wrapper">
+            <!-- BEGIN ROW  -->
+            <div class="col-lg-4">
+                <section class="panel">
+                    <header class="panel-heading">
+                        <span class="label label-primary">积分配置</span>
+                           <span class="tools pull-right">
+                           <a href="javascript:;" class="fa fa-chevron-down"></a>
+                           <a href="javascript:;" class="fa fa-times"></a>
+                           </span>
+                    </header>
+                    <div class="panel-body">
+                        <form class="form-horizontal" role="form">
+                            <div class="form-group">
+                                <label for="inputREG" class="col-lg-4 control-label">用户注册</label>
+                                <div class="col-lg-4">
+                                    <input onchange="chgIntegral(this)" name="REG" class="form-control" id="inputREG" placeholder="注册积分" type="text" value="{$Think.config.REG}">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="inputREG" class="col-lg-4 control-label">用户登录</label>
+                                <div class="col-lg-4">
+                                    <input onchange="chgIntegral(this)" name="LOGIN" class="form-control" id="inputLOGIN" placeholder="登录积分" type="text" value="{$Think.config.LOGIN}">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="inputREG" class="col-lg-4 control-label">用户评论</label>
+                                <div class="col-lg-4">
+                                    <input onchange="chgIntegral(this)" name="COMMENT" class="form-control" id="inputCOMMENT" placeholder="评论积分" type="text" value="{$Think.config.COMMENT}">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="inputREG" class="col-lg-4 control-label">发表话题</label>
+                                <div class="col-lg-4">
+                                    <input onchange="chgIntegral(this)" name="TOPIC" class="form-control" id="inputTOPIC" placeholder="话题积分" type="text" value="{$Think.config.TOPIC}">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="inputREG" class="col-lg-4 control-label">删除评论</label>
+                                <div class="col-lg-4">
+                                    <input onchange="chgIntegral(this)" name="DELCOMMENT" class="form-control" id="inputDELCOMMENT" placeholder="话题积分" type="text" value="{$Think.config.DELCOMMENT}">
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </section>
+            </div>
+            <!-- END ROW  -->
+        </section>
+        <!-- END WRAPPER  -->
+    </section>
+    <!-- END MAIN CONTENT -->
+
+    <include file="Common/footee" />
+</section>
+
+<include file="Common/footer" />
+<script type="text/javascript" language="JavaScript">
+    var chgURL = "__MODULE__/Ajax/chgIntegralConf";
+    function chgIntegral(input){
+        $.post(chgURL,{"key":$(input).attr("name"),"value":$(input).val()});
+    }
+
+</script>
+
+
+<include file="Common/foot" />

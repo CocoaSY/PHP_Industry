@@ -1,0 +1,81 @@
+
+<!-- CUSTOM -->
+<script src="<?php echo ADMIN_PUB?>/js/Category/index.js" type="text/javascript" language="JavaScript"></script>
+
+<!-- BEGIN JS -->
+<script src="<?php echo ADMIN_PUB ?>/js/bootstrap.min.js" ></script><!-- BOOTSTRAP JS -->
+
+<script src="<?php echo ADMIN_PUB ?>/js/advanced-form-components.js" ></script><!-- ADVANCE FORM COMPONENTS PAGE JS  -->
+<script src="<?php echo ADMIN_PUB ?>/js/respond.min.js" ></script><!-- RESPOND JS -->
+<script src="<?php echo ADMIN_PUB ?>/assets/bootstrap-fileupload/bootstrap-fileupload.js"></script><!-- BOOTSTRAP FILEUPLOAD JS  -->
+
+<script src="<?php echo ADMIN_PUB ?>/js/jquery.nicescroll.js" ></script><!-- NICESCROLL JS -->
+<script src="<?php echo ADMIN_PUB ?>/js/common-scripts.js"></script><!-- BASIC COMMON JS -->
+
+<script src="<?php echo ADMIN_PUB ?>/js/jquery.dcjqaccordion.2.7.js"></script><!-- ACCORDIN JS -->
+<script src="<?php echo ADMIN_PUB ?>/assets/bootstrap-datepicker/js/bootstrap-datepicker.js"></script><!-- BOOTSTRAP DATEPICKER JS  -->
+<!-- END JS -->
+
+
+
+<!-- 百度编辑器 -->
+<!-- 配置文件 -->
+<script type="text/javascript" src="__PUBLIC__/ueditor/ueditor.config.js"></script>
+<!-- 编辑器源码文件 -->
+<script type="text/javascript" src="__PUBLIC__/ueditor/ueditor.all.js"></script>
+<!-- 编辑器语言文件 -->
+<script type="text/javascript" src="__PUBLIC__/ueditor/lang/zh-cn/zh-cn.js"></script>
+
+
+<div class="panel-body">
+    <a id="alert" class="btn btn-danger hidden" data-toggle="modal" href="#myAlert">
+        Alert !
+    </a>
+</div>
+<div class="modal fade" id="myAlert" >
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">消息提示</h4>
+            </div>
+            <div id="msg" class="modal-body">
+                Body goes here...
+            </div>
+            <div class="modal-footer">
+                <button id="dismissMyAlert" data-dismiss="modal" class="btn btn-danger" type="button"> Ok</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" language="JavaScript">
+    var myAlert={
+        alert : $("#alert"),
+        msg : $("#msg"),
+        dismissBtn:$("#dismissMyAlert"),
+        show:function(){
+          this.alert.click();
+        },
+        hide:function(){
+            this.dismissBtn.click();
+        },
+        setMsg:function(msg){
+            this.msg.html(msg);
+        }
+    }
+</script>
+
+<script>
+    var updateID = {
+        chgID: function (chgInput,chgidURL) {
+            var oldval = chgInput.getAttribute("oldval");
+            var val = chgInput.value;
+
+            $.post(chgidURL,{"oldid":oldval,"newid":val},function(data){
+                chgInput.setAttribute("oldval",val);
+                myAlert.setMsg(data['msg']);
+                myAlert.show();
+            });
+        }
+    }
+</script>

@@ -1,0 +1,82 @@
+<include file="Common/head" />
+
+
+<!-- BEGIN SECTION -->
+<section id="container">
+    <include file="Common/header" />
+    <include file="Common/nav" />
+
+    <!-- BEGIN MAIN CONTENT -->
+    <section id="main-content">
+        <!-- BEGIN WRAPPER  -->
+        <section class="wrapper">
+            <!-- BEGIN ROW  -->
+            <div class="row">
+                <div class="col-lg-6">
+                    <section class="panel">
+                        <header class="panel-heading">
+                            <span class="label label-primary">添加横幅</span>
+                           <span class="tools pull-right">
+                           <a href="javascript:;" class="fa fa-chevron-down"></a>
+                           <a href="javascript:;" class="fa fa-times"></a>
+                           </span>
+                        </header>
+                        <div class="panel-body">
+
+
+                            <form role="form" action="" method="post" enctype="multipart/form-data">
+
+
+                                <div class="form-group">
+                                    <label for="bn_name">横幅名称</label>
+                                    <input type="text" class="form-control" id="bn_name" name="bn_name">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="bn_ename">横幅英文名称</label>
+                                    <input type="text" class="form-control" id="bn_ename" name="bn_ename">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="bn_pic">图片</label>
+                                    <input type="file" id="bn_pic" name="bn_pic">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="bn_desc">横幅描述</label>
+                                    <textarea class="form-control" id="bn_desc" name="bn_desc"></textarea>
+                                </div>
+
+                                <div class="checkbox">
+                                    <label>
+                                        <input name="bn_show" type="checkbox" checked> 是否显示
+                                    </label>
+                                </div>
+
+                                <button type="submit" class="btn btn-info" onclick="subform()">提交</button>
+                                <input id="sub" type="submit" name="sub" value="submit" hidden="yes">
+                            </form>
+
+
+                        </div>
+                    </section>
+                </div>
+            </div>
+            <!-- END ROW  -->
+        </section>
+        <!-- END WRAPPER  -->
+    </section>
+    <!-- END MAIN CONTENT -->
+
+    <include file="Common/footee" />
+</section>
+
+<include file="Common/footer" />
+<script type="text/javascript" language="JavaScript">
+    function subform(){
+        var sub = document.getElementById("sub");
+        sub.click();
+    }
+
+</script>
+<include file="Common/foot" />

@@ -1,0 +1,174 @@
+<include file="Common/head" />
+
+
+<!-- BEGIN SECTION -->
+<section id="container">
+    <include file="Common/header" />
+    <include file="Common/nav" />
+
+    <!-- BEGIN MAIN CONTENT -->
+    <section id="main-content">
+        <!-- BEGIN WRAPPER  -->
+        <section class="wrapper">
+            <!-- BEGIN ROW  -->
+            <div class="row">
+
+                <div class="col-lg-12">
+                    <section class="panel">
+                        <div class="panel-body">
+                            <a class="btn btn-success" data-toggle="modal" href="#addConf">
+                                添加配置项
+                            </a>
+                        </div>
+                    </section>
+                    <form id="form" action="__CONTROLLER__/deleteConfM" method="post">
+                        <section class="panel">
+
+                            <header class="panel-heading">
+                                <span class="label label-primary">配置项列表</span>
+                           <span class="tools pull-right">
+                           <input type="submit" name="sub" value="批量删除">
+                           </span>
+                            </header>
+
+
+                            <table class="table table-striped table-advance table-hover">
+
+                                <thead>
+                                <tr>
+                                    <th><input type="checkbox" id="checkAll" onclick="selAll()"></th>
+                                    <td>ID</td>
+                                    <td>名称</td>
+                                    <td>英文名称</td>
+                                    <td>类型</td>
+                                    <td>可选值</td>
+                                    <td>默认值</td>
+                                    <td>基本操作</td>
+                                </tr>
+                                </thead>
+
+                                <tbody>
+
+                                <volist  name="confs" id="ele">
+                                    <tr>
+                                        <td><input type="checkbox" class="check" name="dels[]" value="{$ele.cf_id}"></td>
+                                        <td>
+                                            <input style="width: 50px" class="form-control small" oldval="{$ele.cf_id}" value="{$ele.cf_id}" type="text" onchange="chgID(this)">
+                                        </td>
+                                        <td class="hidden-phone">{$ele.cf_name}</td>
+                                        <td>{$ele.cf_ename}</td>
+                                        <td>{$ele.cft_name}</td>
+                                        <td>{$ele.cf_values}</td>
+                                        <td>{$ele.cf_value}</td>
+
+                                        <td>
+                                            <a href="__CONTROLLER__/edit/cf_id/{$ele.cf_id}" class="btn btn-success btn-xs">
+                                                <i class="fa fa-edit"></i>
+                                            </a>
+                                            <a  href="__CONTROLLER__/deleteConf/cf_id/{$ele.cf_id}" class="btn btn-primary btn-xs">
+                                                <i class="fa fa-trash-o"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </volist>
+
+
+
+
+                                </tbody>
+
+
+                            </table>
+
+                        </section>
+                    </form>
+                </div>
+
+            </div>
+            <!-- END ROW  -->
+        </section>
+        <!-- END WRAPPER  -->
+    </section>
+    <!-- END MAIN CONTENT -->
+
+    <include file="Common/footee" />
+</section>
+
+<include file="Common/footer" />
+<script type="text/javascript" language="JavaScript">
+    function selAll(){
+        var forms = document.getElementsByTagName("form");
+        var form = forms[0];
+        var cks = form.getElementsByTagName("input");
+        for(var i=0;i<cks.length;i++){
+            cks[i].check();
+        }
+    }
+
+    var chgidURL = "__CONTROLLER__/chgID";
+    function chgID(chgInput){
+        var oldval = chgInput.getAttribute("oldval");
+        var val = chgInput.value;
+
+        $.post(chgidURL,{"oldid":oldval,"newid":val},function(data){
+            //console.log(data);
+            chgInput.setAttribute("oldval",val);
+            myAlert.setMsg(data['msg']);
+            myAlert.show();
+        });
+
+    }
+
+</script>
+
+<div class="modal fade" id="addConf"  >
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">添加配置项</h4>
+            </div>
+            <form role="form" action="__CONTROLLER__/add" method="post" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="cf_name" class="control-label">网站配置名称</label>
+                        <input type="text" class="form-control" id="cf_name" name="cf_name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cf_ename">网站配置英文名称</label>
+                        <input type="text" class="form-control" id="cf_ename" name="cf_ename"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cf_type">网站配置类型</label>
+                        <div>
+                            <volist name="conftypes" id="ele">
+                                &nbsp;
+                                <input type="radio" id="cf_type" name="cf_type" value="{$ele.cft_id}" <if condition="$ele['cft_id'] eq 1">checked</if> >
+                                <span>{$ele.cft_name}</span>
+                            </volist>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cf_values" class="control-label">网站配置可选值</label>
+                        <input type="text" class="form-control" id="cf_values" name="cf_values">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cf_value" class="control-label">网站配置默认值</label>
+                        <input type="text" class="form-control" id="cf_value" name="cf_value">
+                    </div>
+
+                    <button type="submit" class="btn btn-info" onclick="subform()">提交</button>
+                    <input id="sub" type="submit" name="sub" value="submit" hidden="yes">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<include file="Common/foot" />
+
+

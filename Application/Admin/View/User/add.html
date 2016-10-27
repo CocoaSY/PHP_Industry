@@ -1,0 +1,195 @@
+<include file="Common/head" />
+
+
+<!-- BEGIN SECTION -->
+<section id="container">
+    <include file="Common/header" />
+    <include file="Common/nav" />
+
+    <!-- BEGIN MAIN CONTENT -->
+    <section id="main-content">
+        <!-- BEGIN WRAPPER  -->
+        <section class="wrapper">
+
+            <!-- BEGIN ROW  -->
+            <div class="row">
+                <div class="col-lg-6">
+                    <section class="panel">
+                        <header class="panel-heading">
+                            <span class="label label-primary">添加用户</span>
+                           <span class="tools pull-right">
+                           <a href="javascript:;" class="fa fa-chevron-down"></a>
+                           <a href="javascript:;" class="fa fa-times"></a>
+                           </span>
+                        </header>
+                        <div class="panel-body">
+                            <form class="form-horizontal" role="form" action="" method="post">
+                                <div class="form-group">
+                                    <label for="inputUserName" class="col-lg-2 col-sm-2 control-label">名称</label>
+                                    <div class="col-lg-10">
+                                        <input name="username" type="text" class="form-control" id="inputUserName">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inputNickName" class="col-lg-2 col-sm-2 control-label">昵称</label>
+                                    <div class="col-lg-10">
+                                        <input name="nickname" type="text" class="form-control" id="inputNickName">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inputEmail" class="col-lg-2 col-sm-2 control-label">邮箱</label>
+                                    <div class="col-lg-10">
+                                        <input name="email" type="email" class="form-control" id="inputEmail">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inputPassword" class="col-lg-2 col-sm-2 control-label">密码</label>
+                                    <div class="col-lg-10">
+                                        <input name="password" type="text" class="form-control" id="inputPassword">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inputJob" class="col-lg-2 col-sm-2 control-label">职位</label>
+                                    <div class="col-lg-10">
+                                        <input name="job" type="text" class="form-control" id="inputJob">
+                                    </div>
+                                </div>
+                                <!-- Begin 省份 城市 地区-->
+                                <div class="form-group">
+                                    <label class="col-lg-2 col-sm-2 control-label">地址</label>
+                                    <div class="col-lg-3">
+                                        <select id="province" name="province" class="form-control input-sm m-bot15" onchange="provindeChanged(this)">
+                                            <option value="0" selected>省份</option>
+                                            <volist name="provinces" id="ele">
+                                                <option value="{$ele.id}">{$ele.name}</option>
+                                            </volist>
+                                        </select>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <select id="city" name="city" class="form-control input-sm m-bot15" disabled="yes" onchange="cityChanged(this)">
+                                            <option value="0" selected>城市</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <select id="district" name="district" class="form-control input-sm m-bot15" disabled="yes">
+                                            <option value="0" selected>地区</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <!-- End 省份 城市 地区-->
+                                <div class="form-group">
+                                    <label class="col-lg-2 col-sm-2 control-label">性别</label>
+                                    <div class="col-lg-10">
+                                        <label class="checkbox-inline">
+                                            <input id="sex0" name="sex" value="0" type="radio" checked> 保密
+                                        </label>
+                                        <label class="checkbox-inline">
+                                            <input id="sex1" name="sex" value="1" type="radio"> 男
+                                        </label>
+                                        <label class="checkbox-inline">
+                                            <input id="sex2" name="sex" value="2" type="radio"> 女
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inputIntro" class="col-lg-2 col-sm-2 control-label">签名</label>
+                                    <div class="col-lg-10">
+                                        <textarea id="inputIntro" name="intro" class="wysihtml5 form-control" rows="4"></textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-lg-offset-2 col-lg-10">
+                                        <button type="submit" class="btn btn-danger">保存修改</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </section>
+                </div>
+            </div>
+            <!-- END ROW  -->
+
+        </section>
+        <!-- END WRAPPER  -->
+    </section>
+    <!-- END MAIN CONTENT -->
+
+    <include file="Common/footee" />
+</section>
+
+<include file="Common/footer" />
+<script type="text/javascript" language="JavaScript">
+
+    var cityurl = "__MODULE__/Location/citys";
+    var districturl = "__MODULE__/Location/districts";
+
+    function provindeChanged($this){
+        var districtSel = document.getElementById("district");
+        districtSel.options = 0;
+        districtSel.innerHTML="<option value=\"0\" selected>地区</option>";
+        $("#district").attr("disabled","yes");
+
+        var index = $this.selectedIndex;
+        var options = $this.options;
+        var option = options[index];
+
+        var citySel = $("#city");
+
+        if(index==0){
+            citySel.attr("disabled","yes");
+        }else{
+            citySel.removeAttr("disabled");
+        }
+
+        $.post(cityurl,{pid:option.value},function($data){
+            var citySelect=document.getElementById('city');
+            citySelect.options = 0;
+            citySelect.innerHTML="<option value=\"0\" selected>城市</option>";
+            if($data.length==0){
+                citySel.attr("disabled","yes");
+            }else{
+                citySel.removeAttr("disabled");
+                for(var i=0;i<$data.length;i++){
+                    var city = $data[i];
+                    var cityOption = document.createElement("option");
+                    cityOption.value=city['id'];
+                    cityOption.innerHTML=city['name'];
+                    citySelect.appendChild(cityOption);
+                }
+            }
+        });
+    }
+
+    function cityChanged($this){
+        var index = $this.selectedIndex;
+        var options = $this.options;
+        var option = options[index];
+
+        var districtSel = $("#district");
+
+        if(index==0){
+            districtSel.attr("disabled","yes");
+        }else{
+            districtSel.removeAttr("disabled");
+        }
+
+        $.post(districturl,{cid:option.value},function($data){
+            var districtSelect=document.getElementById('district');
+            districtSelect.options = 0;
+            districtSelect.innerHTML="<option value=\"0\" selected>地区</option>";
+            if($data.length==0){
+                districtSel.attr("disabled","yes");
+            }else{
+                districtSel.removeAttr("disabled");
+                for(var i=0;i<$data.length;i++){
+                    var district = $data[i];
+                    var districtOption = document.createElement("option");
+                    districtOption.value=district['id'];
+                    districtOption.innerHTML=district['name'];
+                    districtSelect.appendChild(districtOption);
+                }
+            }
+        });
+    }
+</script>
+<include file="Common/foot" />

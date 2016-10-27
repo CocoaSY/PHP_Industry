@@ -1,0 +1,45 @@
+<include file="Common/head" />
+
+
+
+<!-- BEGIN SECTION -->
+<div class="container">
+    <form id="form" class="form-signin" action="Login/login" method="post">
+
+        <h2 class="form-signin-heading">
+            sign in now
+        </h2>
+
+        <!-- LOGIN WRAPPER  -->
+        <div class="login-wrap">
+            <input type="text" class="form-control" placeholder="User ID" autofocus name="ad_name">
+            <input type="password" class="form-control" placeholder="Password" name="ad_password">
+            <button class="btn btn-lg btn-login btn-block" type="submit" onclick="subForm()">
+                Sign in
+            </button>
+        </div>
+        <!-- END LOGIN WRAPPER -->
+
+    </form>
+</div>
+<!-- END SECTION -->
+
+
+<include file="Common/foot" />
+
+<script type="text/javascript" language="JavaScript">
+    $(document).ready(setBC());
+
+    function setBC(){
+        var body = $("body");
+        body.attr("class","login-screen");
+    }
+
+    function subForm(){
+        var form = $("#form");
+        form.submit();
+    }
+
+</script>
+
+

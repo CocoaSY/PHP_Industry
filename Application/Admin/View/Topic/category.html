@@ -1,0 +1,138 @@
+<include file="Common/head" />
+
+
+<!-- BEGIN SECTION -->
+<section id="container">
+    <include file="Common/header" />
+    <include file="Common/nav" />
+
+    <!-- BEGIN MAIN CONTENT -->
+    <section id="main-content">
+        <!-- BEGIN WRAPPER  -->
+        <section class="wrapper">
+            <!-- BEGIN ROW  -->
+
+            <div class="col-lg-6">
+                <section class="panel">
+                    <div class="panel-body">
+                        <a class="btn btn-success" data-toggle="modal" href="#addTopicCate">
+                            添加话题类别
+                        </a>
+                    </div>
+                </section>
+
+                <section class="panel">
+                    <header class="panel-heading">
+                        <span class="label label-primary">话题类别</span>
+                           <span class="tools pull-right">
+                           <a href="javascript:;" class="fa fa-chevron-down"></a>
+                           <a href="javascript:;" class="fa fa-times"></a>
+                           </span>
+                    </header>
+                    <table id="tcate" class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>中文名称</th>
+                            <th>英文名称</th>
+                            <td>基本操作</td>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <volist name="tcates" id="ele">
+                            <tr>
+                                <td>{$ele.t_id}</td>
+                                <td>{$ele.name}</td>
+                                <td>{$ele.ename}</td>
+                                <td>
+                                    <a href="__CONTROLLER__/editCate/t_id/{$ele.t_id}" class="btn btn-success btn-xs">
+                                        <i class="fa fa-edit"></i>
+                                    </a>
+                                    <a  href="__CONTROLLER__/deleteACate/t_id/{$ele.t_id}" class="btn btn-primary btn-xs">
+                                        <i class="fa fa-trash-o"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        </volist>
+                        </tbody>
+                    </table>
+                </section>
+
+            </div>
+
+            <!-- END ROW  -->
+        </section>
+        <!-- END WRAPPER  -->
+    </section>
+    <!-- END MAIN CONTENT -->
+
+    <include file="Common/footee" />
+</section>
+
+<include file="Common/footer" />
+
+<div class="modal fade" id="addTopicCate"  >
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">添加话题分类</h4>
+            </div>
+            <form id="addCate" class="form-horizontal" role="form" method="post">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="inputTcateName" class="col-lg-2 col-sm-2 control-label">名称</label>
+                        <div class="col-lg-10">
+                            <input name="tcatename" type="text" class="form-control" id="inputTcateName">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputTcateEname" class="col-lg-2 col-sm-2 control-label">英文名称</label>
+                        <div class="col-lg-10">
+                            <input name="tcateename" type="text" class="form-control" id="inputTcateEname">
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button id="addCateClose" data-dismiss="modal" class="btn btn-default" type="button">关闭</button>
+                    <button class="btn btn-success"type="button" onclick="addCate()">提交话题</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" language="JavaScript">
+    var addCategory = "__MODULE__/Topic/addCategory";
+    function addCate(){
+        $.post(addCategory,$("#addCate").serialize(),function(res){
+            $("#addCateClose").click();
+            console.log(res);
+            if(res['rs']==1){
+                var tr = document.createElement("tr");
+                for(var i in res['info']){
+                    var td = document.createElement("td");
+                    td.innerHTML = res['info'][i];
+                    tr.appendChild(td);
+                }
+                var aTD = document.createElement("td");
+                aTD.innerHTML = "<a href=\"__CONTROLLER__/editCate/t_id/"+res['info']['t_id']+"\" class=\"btn btn-success btn-xs\"> <i class=\"fa fa-edit\"></i> </a> <a  href=\"__CONTROLLER__/deleteACate/t_id/"+res['info']['t_id']+"\" class=\"btn btn-primary btn-xs\"> <i class=\"fa fa-trash-o\"></i> </a>";
+                tr.appendChild(aTD);
+
+                var tcate = document.getElementById("tcate");
+                var tbody = tcate.getElementsByTagName("tbody")[0];
+                tbody.appendChild(tr);
+
+            }
+            myAlert.setMsg(res['msg']);
+            myAlert.show();
+        });
+
+    }
+</script>
+
+
+
+
+<include file="Common/foot" />

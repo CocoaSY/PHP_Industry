@@ -1,0 +1,199 @@
+
+<include file="Common/head" />
+
+<div id="wrapper" class="home-page">
+
+    <include file="Common/header" />
+
+    <section id="banner">
+
+        <!-- Slider -->
+        <div id="main-slider" class="flexslider">
+            <ul class="slides">
+                <volist name="banners" id="ele">
+                    <li>
+                        <img src="{$ele.bn_pic}" alt="{$ele.bn_ename}" />
+                        <div class="flex-caption">
+                            <h3>{$ele.bn_name}</h3>
+                            <p>{$ele.bn_desc}</p>
+
+                        </div>
+                    </li>
+                </volist>
+            </ul>
+        </div>
+        <!-- end slider -->
+
+    </section>
+
+    <section id="call-to-action-2">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-10 col-sm-9">
+                    <h3>{$aArticle.ar_title}</h3>
+                    <p>
+                        {$aArticle.ar_desc}
+                    </p>
+                </div>
+                <div class="col-md-2 col-sm-3">
+                    <a href="__MODULE__/Article/index/ar_id/{$aArticle.ar_id}" class="btn btn-primary">Read More</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="content">
+
+        <div class="container">
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="aligncenter">
+                        <h2 class="aligncenter">{$list1_category.cate_name}</h2>
+                        {$list1_category.cate_desc}
+                    </div>
+                    <br/>
+                </div>
+            </div>
+
+            <for start="0" end="count($list1_articles)">
+                <if condition="$i%3 eq 0"><div class="row"></if>
+
+                <div class="col-sm-4 info-blocks">
+
+                    <i class="icon-info-blocks fa <if condition="$list1_articles[$i]['ari_id'] neq 0">{$list1_articles[$i]['ari_cname']}<else />fa-bell-o</if>"></i>
+                    <div class="info-blocks-in">
+                        <h3>{$list1_articles[$i]['ar_title']}</h3>
+                        <p>{$list1_articles[$i]['ar_desc']}</p>
+                    </div>
+                </div>
+
+                <if condition="$i%3 eq 2"></div></if>
+            </for>
+
+        </div>
+
+    </section>
+
+    <section class="section-padding gray-bg">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="section-title text-center">
+                        <h2>{$list2_article.cate_name}</h2>
+                        <p>
+                            {$list2_article.cate_desc}
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 col-sm-6">
+                    <div class="about-text">
+                        {$list2_article.ar_desc}
+                        <a href="__MODULE__/Article/index/ar_id/{$list2_article.ar_id}" class="btn btn-primary">Learn More</a>
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-6">
+                    <div class="about-image">
+                        <img src="{$list2_article.ar_pic}" alt="About Images">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <div class="about home-about">
+        <div class="container">
+            <div class="row">
+
+            <volist name="list3_cates" id="ele">
+
+                <if condition="count($ele['articles']) neq 0">
+
+                    <div class="col-md-4">
+                        <div class="block-heading-two">
+                            <h3><span>{$ele.cate_name}</span></h3>
+                        </div>
+                        <!-- Accordion starts -->
+                        <div class="panel-group" id="accordion-alt3">
+                            <!-- Panel. Use "panel-XXX" class for different colors. Replace "XXX" with color. -->
+                            <volist name="ele.articles" id="vo">
+                                <div class="panel">
+                                    <!-- Panel heading -->
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                            <a data-toggle="collapse" data-parent="#accordion-alt3" href="#collapseOne-alt{$vo.ar_id}">
+                                                <i class="fa fa-angle-right"></i> {$vo.ar_title}
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="collapseOne-alt{$vo.ar_id}" class="panel-collapse collapse">
+                                        <!-- Panel body -->
+                                        <div class="panel-body">
+                                            {$vo.ar_content}
+                                        </div>
+                                    </div>
+                                </div>
+                            </volist>
+
+                        </div>
+                        <!-- Accordion ends -->
+
+                    </div>
+
+                    <else />
+
+                    <if condition="$ele['cate_pic'] eq ''">
+
+                        <div class="col-md-4">
+                            <!-- Heading and para -->
+                            <div class="block-heading-two">
+                                <h3><span>{$ele.cate_name}</span></h3>
+                            </div>
+                            <p>{$ele.cate_content}</p>
+                        </div>
+
+                        <else />
+
+                        <div class="col-md-4">
+                            <div class="block-heading-two">
+                                <h3><span>{$ele.cate_name}</span></h3>
+                            </div>
+                            <div class="testimonials">
+                                <div class="active item">
+                                    <blockquote><p>{$ele.cate_desc}</p></blockquote>
+                                    <div class="carousel-info">
+                                        <img alt="" src="{$ele.cate_pic}" class="pull-left">
+                                        <div class="pull-left">
+                                            {$ele.cate_content}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </if>
+
+                </if>
+
+            </volist>
+
+            </div>
+
+
+
+            <br>
+
+        </div>
+
+    </div>
+
+
+    <include file="Common/footer" />
+
+</div>
+<a href="#" class="scrollup"><i class="fa fa-angle-up active"></i></a>
+
+<include file="Common/foot" />
