@@ -79,10 +79,10 @@
                                         <td>{$ele.ar_time}</td>
 
                                         <td>
-                                            <a href="__CONTROLLER__/edit/ar_id/{$ele.ar_id}" class="btn btn-success btn-xs">
+                                            <a aid="{$ele.ar_id}" onclick="getArticle(this)" class="btn btn-success btn-xs">
                                                 <i class="fa fa-edit"></i>
                                             </a>
-                                            <a  href="__CONTROLLER__/deleteArc/ar_id/{$ele.ar_id}" class="btn btn-primary btn-xs">
+                                            <a aid="{$ele.ar_id}" onclick="delArticle(this)" class="btn btn-primary btn-xs">
                                                 <i class="fa fa-trash-o"></i>
                                             </a>
                                         </td>
@@ -245,6 +245,115 @@
     </div>
 </div>
 
+<div class="modal fade" id="editArticle"  >
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">添加文章</h4>
+            </div>
+
+            <div class="modal-body">
+
+                <form id="editArticleForm" role="form" action="" method="post" enctype="multipart/form-data">
+                    <input id="e_ar_id" type="text" name="ar_id" hidden="yes"/>
+
+                    <div class="form-group">
+                        <label for="e_ar_title" class="control-label">文章名称</label>
+                        <input type="text" class="form-control" id="e_ar_title" name="ar_title" value="{$article.ar_title}">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="e_ar_author" class="control-label">文章作者</label>
+                        <input type="text" class="form-control" id="e_ar_author" name="ar_author" value="{$article.ar_author}">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label">是否推荐</label>
+                        <div id="e_ar_rem">
+                            <input type="radio" name="ar_rem" value="1">           <span>推荐</span>
+                            <input type="radio" name="ar_rem" value="0">           <span>不推荐</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="e_ar_keywords" class="control-label">关键字</label>
+                        <div>
+                            <input id="e_ar_keywords" class="form-control" type="text" name="ar_keywords" value="{$article.ar_keywords}">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="e_ar_desc" class="control-label">文章描述</label>
+                        <div>
+                            <input id="e_ar_desc" class="form-control" type="text" name="ar_desc" value="{$article.ar_desc}">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label" >所属栏目</label>
+                        <div>
+                            <select id="e_ar_cateid" class="form-control m-bot15" name="ar_cateid">
+                                <option value="0">请选择</option>
+                                <volist name="cates" id="ele">
+                                    <option value="{$ele['cate_id']}">{$ele['pre']}{$ele['cate_name']}</option>
+                                </volist>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ar_icon">图标</label>
+                        <select name="ar_icon" id="e_ar_icon">
+                            <option value="0">请选择</option>
+                            <volist name="arIcons" id="ele">
+                                <option value="{$ele.ari_id}">{$ele.ari_name}</option>
+                            </volist>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label">图片</label>
+                        <div class="panel-body">
+                            <div class="form-group last">
+                                <div class="col-md-4">
+                                    <div class="fileupload fileupload-new" data-provides="fileupload">
+                                        <div class="fileupload-new thumbnail" >
+                                            <img src="http://www.placehold.it/200x150/EFEFEF/AAAAAA&amp;text=no+image" alt="">
+                                        </div>
+                                        <div class="fileupload-preview fileupload-exists thumbnail" ></div>
+                                        <div>
+                                            <span class="btn btn-white btn-file">
+                                                    <span class="fileupload-new"><i class="fa fa-paper-clip"></i>选择图片</span>
+                                                    <span class="fileupload-exists"><i class="fa fa-undo"></i>更改</span>
+                                                    <input name="ar_pic" type="file" class="default">
+                                                </span>
+                                            <a href="#" class="btn btn-danger fileupload-exists" data-dismiss="fileupload">
+                                                <i class="fa fa-trash"></i>移除
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="content">文章内容</label>
+                        <textarea id="e_content" name="ar_content"></textarea>
+                    </div>
+                </form>
+            </div>
+
+
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-info" onclick="updateArticle()">提交</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
 <script type="text/javascript" language="JavaScript">
 
     var ue = UE.getEditor('content',{
@@ -285,7 +394,87 @@
         });
     }
 
+    var getArticleURL = "__CONTROLLER__/getArticle";
+    function getArticle(a){
+        $.post(getArticleURL,{"aid":$(a).attr("aid")},function(data){
+            $("#editArticle #e_ar_id").val(data['ar_id']);
+            $("#editArticle #e_ar_title").val(data['ar_title']);
+            $("#editArticle #e_ar_author").val(data['ar_author']);
 
+            var remcomond = document.getElementById("e_ar_rem");
+            var sels = remcomond.getElementsByTagName("input");
+            for(var i=0;i < sels.length ; i++){
+                var sel = sels[i];
+                if($(sel).val() == data['ar_rem']){
+                    $(sel).prop("checked",true);
+                }
+            }
+
+            $("#editArticle #e_ar_keywords").val(data['ar_keywords']);
+            $("#editArticle #e_ar_desc").val(data['ar_desc']);
+            $("#editArticle #e_content").val(data['ar_content']);
+
+
+            var select = document.getElementById("e_ar_cateid");
+            var ops = select.getElementsByTagName("option");
+            for(var i=0;i < ops.length ; i++){
+                var op = ops[i];
+                if($(op).val() == data['ar_cateid']){
+                    $(op).prop("selected",true);
+                }
+            }
+
+            var select2 = document.getElementById("e_ar_icon");
+            var ops2 = select2.getElementsByTagName("option");
+            for(var j=0;j < ops2.length ; j++){
+                var op2 = ops2[i];
+                if($(op2).val() == data['ari_id']){
+                    $(op2).prop("selected",true);
+                }
+            }
+
+            if(data['ar_pic'].length>0){
+                $("#editArticle img").attr("src",data['ar_pic']);
+            }
+
+            var ue2 = UE.getEditor('e_content',{
+                initialFrameWidth:500,
+                initialFrameHeight:200
+            });
+
+            $('#editArticle').modal();
+        });
+    }
+
+    var updateArticleURL = "__CONTROLLER__/updateArticle";
+    function updateArticle(){
+        $("#editArticleForm").ajaxSubmit({
+            type:'post',
+            url: updateArticleURL,
+            beforeSubmit: function(){
+                $("#editArticle").modal("hide");
+                myAlert.setMsg("数据更新中...");
+                myAlert.show();
+            },
+            success: function(res){
+                if(res['rs'] == 1){ // 成功
+                    // TODO 更新新数据
+
+
+                }else{              // 失败
+                    console.log("失败");
+                }
+                myAlert.setMsg(res['msg']);
+            },
+            resetForm: false,
+            clearForm: false
+        });
+    }
+
+    var delArticleURL = "__CONTROLLER__/delArticle";
+    function delArticle(){
+
+    }
 
 </script>
 

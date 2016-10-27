@@ -18,6 +18,13 @@ use Think\Upload;
 
 class ArticleController extends BaseController {
 
+    private $articleM;
+
+    public function __construct(){
+        parent::__construct();
+        $this->articleM = new ArticleModel();
+    }
+
     public function index(){
         $article = D("Article");
 
@@ -294,9 +301,88 @@ class ArticleController extends BaseController {
 
     }
 
+    public function getArticle(){
+        $aid = I("aid");
+        $article = $this->articleM->where(array("ar_id"=>$aid))->find();
+        $this->ajaxReturn($article);
+    }
 
+    public function updateArticle(){
 
+        if(IS_AJAX){
 
+            $data['ar_id']          = I("ar_id");           //文章ID
+            $data['ar_title']       = I("ar_title");        //文章标题
+            $data['ar_author']      = I("ar_author");       //文章作者
+            $data['ar_rem']         = I("ar_rem");          //是否推荐
+            $data['ar_keywords']    = I("ar_keywords");     //关键词
+            $data['ar_desc']        = I("ar_desc");         //文章描述
+            $data['ar_cateid']      = I("ar_cateid");       //所属栏目
+            $data['ar_content']     = I("ar_content");      //文章内容
+            $data['ar_time']        = Date("Y-m-d H:i:s");  //创建时间
+            $data['ar_icon']        = I("ar_icon");         //文章图标
+
+            //图片上传
+            $upConfig = C("artImg");
+            $upload = new Upload($upConfig);
+
+            //上传单个文件
+            $info = $upload->uploadOne($_FILES['ar_pic']);
+            if($info){
+                // 删除原始图片
+                $articleInfo = $this->articleM->where(array('ar_id'=>$data['ar_id']))->find();
+                $delfile_o = ".".substr($articleInfo['ar_pic'],strlen(__ROOT__));
+                unlink($delfile_o);
+
+                $pic_path = __ROOT__.substr($info['savepath'].$info['savename'],1);
+                $data['ar_pic'] = $pic_path;    //缩略图地址
+            }
+
+            if($this->articleM->create($data)){
+                $rs = $this->articleM->where("ar_id=".$data['ar_id'])->save($data);
+                if($rs){
+                    $article = $this->articleM->where(array("ar_id"=>$rs))->find();
+                    $res['rs'] = 1;
+                    $res['msg'] = "文章修改成功";
+                    $res['info'] = $article;
+                }else{
+                    $res['rs'] = 0;
+                    $res['msg'] = "文章修改失败";
+                    $res['info'] = 0;
+
+                }
+            }else{
+                $res['rs'] = 0;
+                $res['msg'] = "文章修改数据有冲突";
+                $res['info'] = 0;
+
+            }
+            $this->ajaxReturn($res);
+        }
+    }
+
+    public function delArticle(){
+        if($_POST){
+            $aid = I("aid");
+
+            // 删除原始图片
+            $articleInfo = $this->articleM->where(array('ar_id'=>$aid))->find();
+            $delfile_o = ".".substr($articleInfo['ar_pic'],strlen(__ROOT__));
+            unlink($delfile_o);
+
+            $rs = $this->articleM->where(array('ar_id'=>$aid))->delete();
+            if($rs){
+                $res['rs'] = 1;
+                $res['msg'] = "删除成功";
+                $res['info'] = 1;
+            }else{
+                $res['rs'] = 0;
+                $res['msg'] = "删除失败";
+                $res['info'] = 0;
+            }
+            $this->ajaxReturn($res);
+        }
+    }
 
 
 
