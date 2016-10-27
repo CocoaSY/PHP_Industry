@@ -384,6 +384,28 @@ class ArticleController extends BaseController {
         }
     }
 
+    public function chgArticleID(){
+        if(IS_AJAX){
+            $oldid = I("oldid");
+            $newid = I("newid");
+
+            $rs = $this->articleM->where(array("ar_id"=>$oldid))->setField("ar_id",$newid);
+
+            if($rs){
+                $article = $this->articleM->where(array("ar_id"=>$newid))->find();
+                $res['rs'] = $rs;
+                $res['msg'] = "ID修改成功";
+                $res['info'] = $article;
+            }else{
+                $res['rs'] = $rs;
+                $res['msg'] = "ID修改失败";
+                $res['info'] = 0;
+            }
+
+            $this->ajaxReturn($res);
+        }
+    }
+
 
 
 

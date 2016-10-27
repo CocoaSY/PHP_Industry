@@ -54,7 +54,9 @@
                                 <volist  name="list" id="ele">
                                     <tr>
                                         <td><input type="checkbox" class="check" name="dels[]" value="{$ele.ar_id}"></td>
-                                        <td><a href="#">{$ele.ar_id}</a></td>
+                                        <td>
+                                            <input style="width: 50px" class="form-control small" oldval="{$ele.ar_id}" value="{$ele.ar_id}" type="text" onchange="updateID.chgID(this,'__CONTROLLER__/chgArticleID')">
+                                        </td>
                                         <td class="hidden-phone">{$ele.ar_title}</td>
                                         <td>
                                             <if condition="$ele['ar_pic'] neq ''">
