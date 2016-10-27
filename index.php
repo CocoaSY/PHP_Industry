@@ -21,7 +21,7 @@ define('APP_DEBUG',True);
 define('APP_PATH','./Application/');
 
 
-define("SITEURL","http://www.ssy123.site/");
+define("SITEURL","http://localhost/www/PHP_Industry/");
 
 //公共资源目录
 define("MY_PUB",SITEURL."Public");

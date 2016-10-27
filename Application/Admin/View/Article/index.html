@@ -143,84 +143,104 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                 <h4 class="modal-title">添加文章</h4>
             </div>
-            <form role="form" action="__CONTROLLER__/add" method="post" enctype="multipart/form-data">
+
                 <div class="modal-body">
 
-                    <div class="form-group">
-                        <label for="ar_title" class="control-label">文章名称</label>
-                        <input type="text" class="form-control" id="ar_title" name="ar_title">
-                    </div>
+                    <form id="addArticleForm" role="form" action="" method="post" enctype="multipart/form-data">
 
-                    <div class="form-group">
-                        <label for="ar_author" class="control-label">文章作者</label>
-                        <input type="text" class="form-control" id="ar_author" name="ar_author">
-                    </div>
-
-                    <div class="form-group">
-                        <label class="control-label">是否推荐</label>
-                        <div>
-                            <input type="radio" name="ar_rem" value="1">           <span>推荐</span>
-                            <input type="radio" name="ar_rem" value="0" checked>           <span>不推荐</span>
+                        <div class="form-group">
+                            <label for="ar_title" class="control-label">文章名称</label>
+                            <input type="text" class="form-control" id="ar_title" name="ar_title">
                         </div>
-                    </div>
 
-                    <div class="form-group">
-                        <label for="ar_keywords" class="control-label">关键字</label>
-                        <div>
-                            <input id="ar_keywords" class="form-control" type="text" name="ar_keywords">
+                        <div class="form-group">
+                            <label for="ar_author" class="control-label">文章作者</label>
+                            <input type="text" class="form-control" id="ar_author" name="ar_author">
                         </div>
-                    </div>
 
-                    <div class="form-group">
-                        <label for="ar_desc" class="control-label">文章描述</label>
-                        <div>
-                            <input id="ar_desc" class="form-control" type="text" name="ar_desc">
+                        <div class="form-group">
+                            <label class="control-label">是否推荐</label>
+                            <div>
+                                <input type="radio" name="ar_rem" value="1">           <span>推荐</span>
+                                <input type="radio" name="ar_rem" value="0" checked>           <span>不推荐</span>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="form-group">
-                        <label class="control-label" >所属栏目</label>
-                        <div>
-                            <select class="form-control m-bot15" name="ar_cateid">
+                        <div class="form-group">
+                            <label for="ar_keywords" class="control-label">关键字</label>
+                            <div>
+                                <input id="ar_keywords" class="form-control" type="text" name="ar_keywords">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="ar_desc" class="control-label">文章描述</label>
+                            <div>
+                                <input id="ar_desc" class="form-control" type="text" name="ar_desc">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label" >所属栏目</label>
+                            <div>
+                                <select class="form-control m-bot15" name="ar_cateid">
+                                    <option value="0">请选择</option>
+                                    <volist name="cates" id="ele">
+                                        <option value="{$ele['cate_id']}">{$ele['pre']}{$ele['cate_name']}</option>
+                                    </volist>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="ar_icon">图标</label>
+                            <select name="ar_icon" id="ar_icon">
                                 <option value="0">请选择</option>
-                                <volist name="cates" id="ele">
-                                    <option value="{$ele['cate_id']}">{$ele['pre']}{$ele['cate_name']}</option>
+                                <volist name="arIcons" id="ele">
+                                    <option value="{$ele.ari_id}">{$ele.ari_name}</option>
                                 </volist>
                             </select>
                         </div>
-                    </div>
 
-                    <div class="form-group">
-                        <label for="ar_icon">图标</label>
-                        <select name="ar_icon" id="ar_icon">
-                            <option value="0">请选择</option>
-                            <volist name="arIcons" id="ele">
-                                <option value="{$ele.ari_id}">{$ele.ari_name}</option>
-                            </volist>
-                        </select>
-                    </div>
+                        <div class="form-group">
+                            <label class="control-label">图片</label>
+                            <div class="panel-body">
+                                <div class="form-group last">
+                                    <div class="col-md-4">
+                                        <div class="fileupload fileupload-new" data-provides="fileupload">
+                                            <div class="fileupload-new thumbnail" >
+                                                <img src="http://www.placehold.it/200x150/EFEFEF/AAAAAA&amp;text=no+image" alt="">
+                                            </div>
+                                            <div class="fileupload-preview fileupload-exists thumbnail" ></div>
+                                            <div>
+                                            <span class="btn btn-white btn-file">
+                                                    <span class="fileupload-new"><i class="fa fa-paper-clip"></i>选择图片</span>
+                                                    <span class="fileupload-exists"><i class="fa fa-undo"></i>更改</span>
+                                                    <input name="ar_pic" type="file" class="default">
+                                                </span>
+                                                <a href="#" class="btn btn-danger fileupload-exists" data-dismiss="fileupload">
+                                                    <i class="fa fa-trash"></i>移除
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
-                    <div class="form-group">
-                        <label for="ar_pic">图片</label>
-                        <input type="file" id="ar_pic" name="ar_pic">
-                    </div>
+                        <div class="form-group">
+                            <label for="content">文章内容</label>
+                            <textarea id="content" name="ar_content"></textarea>
+                        </div>
 
-                    <div class="form-group">
-                        <label for="content">文章内容</label>
-                        <textarea id="content" name="ar_content"></textarea>
-                    </div>
-
-                    <!--<div class="checkbox">-->
-                    <!--<label>-->
-                    <!--<input type="checkbox"> Check me out-->
-                    <!--</label>-->
-                    <!--</div>-->
-                    <button type="submit" class="btn btn-info" onclick="subform()">提交</button>
-                    <input id="sub" type="submit" name="sub" value="submit" hidden="yes">
-
-
+                    </form>
                 </div>
-            </form>
+
+
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-info" onclick="addArticle()">提交</button>
+            </div>
+
         </div>
     </div>
 </div>
@@ -242,8 +262,30 @@
 <script type="text/javascript" language="JavaScript">
     var addArticleURL = "__CONTROLLER__/addArticle";
     function addArticle(){
+        $("#addArticleForm").ajaxSubmit({
+            type:'post',
+            url: addArticleURL,
+            beforeSubmit: function(){
+                $("#addArticle").modal("hide");
+                myAlert.setMsg("数据上传中...");
+                myAlert.show();
+            },
+            success: function(res){
+                if(res['rs'] == 1){ // 成功
+                    // TODO 插入新数据
 
+
+                }else{              // 失败
+                    console.log("失败");
+                }
+                myAlert.setMsg(res['msg']);
+            },
+            resetForm: false,
+            clearForm: false
+        });
     }
+
+
 
 </script>
 
