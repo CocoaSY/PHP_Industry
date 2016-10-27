@@ -52,17 +52,17 @@
                                     <tr>
                                         <td><input type="checkbox" class="check" name="dels[]" value="{$ele.ari_id}"></td>
                                         <td>
-                                            <input style="width: 50px" class="form-control small" oldval="{$ele.ari_id}" value="{$ele.ari_id}" type="text">
+                                            <input style="width: 50px" class="form-control small" oldval="{$ele.ari_id}" value="{$ele.ari_id}" type="text" onchange="updateID.chgID(this,'__CONTROLLER__/chgIconID')">
                                         </td>
                                         <td>{$ele.ari_name}</td>
                                         <td>{$ele.ari_ename}</td>
                                         <td><i class="icon-info-blocks fa {$ele.ari_cname}"></i></td>
                                         <td>{$ele.ari_cname}</td>
                                         <td>
-                                            <a href="__CONTROLLER__/editIcon/ari_id/{$ele.ari_id}" class="btn btn-success btn-xs">
+                                            <a iid="{$ele.ari_id}" onclick="getIcon(this)" class="btn btn-success btn-xs">
                                                 <i class="fa fa-edit"></i>
                                             </a>
-                                            <a  href="__CONTROLLER__/deleteIcon/ari_id/{$ele.ari_id}" class="btn btn-primary btn-xs">
+                                            <a iid="{$ele.ari_id}" onclick="delIcon(this)" class="btn btn-primary btn-xs">
                                                 <i class="fa fa-trash-o"></i>
                                             </a>
                                         </td>
@@ -100,7 +100,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                 <h4 class="modal-title">添加图标</h4>
             </div>
-            <form role="form" action="__CONTROLLER__/addIcon" method="post" enctype="multipart/form-data">
+            <form role="form" action="" method="post" enctype="multipart/form-data">
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="name" class="control-label">名称</label>
@@ -117,13 +117,45 @@
                         <input type="text" class="form-control" id="cname" name="ari_cname">
                     </div>
 
-                    <button id="myIconClose" data-dismiss="modal" class="hidden btn btn-default" type="button">关闭</button>
-                    <button type="button" class="btn btn-info" onclick="subIcon(this.parentElement)">提交</button>
+                    <button type="button" class="btn btn-info" onclick="addIcon(this.parentElement)">提交</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="editIcon"  >
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">添加图标</h4>
+            </div>
+            <form id="editIconForm" role="form" action="" method="post" enctype="multipart/form-data">
+                <input id="e_ari_id" type="text" name="ari_id" hidden="yes"/>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="name" class="control-label">名称</label>
+                        <input type="text" class="form-control" id="e_name" name="ari_name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ename">英文名称</label>
+                        <input type="text" class="form-control" id="e_ename" name="ari_ename"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cname" class="control-label">类名称</label>
+                        <input type="text" class="form-control" id="e_cname" name="ari_cname">
+                    </div>
+
+                    <button type="button" class="btn btn-info" onclick="updateIcon()">提交</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <script type="text/javascript" language="JavaScript">
     function selAll(){
         var forms = document.getElementsByTagName("form");
@@ -134,28 +166,22 @@
         }
     }
 
-    var addIconUrl = "__CONTROLLER__/addIcon";
-    function subIcon(aDiv){
+    var addIconURL = "__CONTROLLER__/addIcon";
+    function addIcon(aDiv){
         var ninput = $(aDiv).find("#name");
         var eninput = $(aDiv).find("#ename");
         var cninput = $(aDiv).find("#cname");
-        $.post(addIconUrl,{"name":ninput.val(),"ename":eninput.val(),"cname":cninput.val()},function(res){
+        $.post(addIconURL,{"name":ninput.val(),"ename":eninput.val(),"cname":cninput.val()},function(res){
             if(res['rs']!=0){
                 var aIcon = res['info'];console.log(aIcon);
                 var tr = document.createElement("tr");
                 var td1 = document.createElement("td");
-//                td1.setAttribute("type","checkbox");
-//                td1.setAttribute("class","check");
-//                td1.setAttribute("name","dels[]");
-//                td1.setAttribute("value",aIcon['ari_id']);
-//                tr.appendChild(td1);
                 $(td1).html("<input type=\"checkbox\" class=\"check\" name=\"dels[]\" value=\""+aIcon['ari_id']+"\">");
                 $(tr).append($(td1));
                 for(var j in  aIcon){
                     var td = document.createElement("td");
                     if(j=="ari_id"){
-                        //td.innerHTML = "<input style=\"width: 50px\" class=\"form-control small\" oldval=\""+aIcon[j]+"\" value=\""+aIcon[j]+"\" type=\"text\">";
-                        $(td).html("<input style=\"width: 50px\" class=\"form-control small\" oldval=\""+aIcon[j]+"\" value=\""+aIcon[j]+"\" type=\"text\">");
+                        $(td).html("<input style=\"width: 50px\" class=\"form-control small\" oldval=\""+aIcon[j]+"\" value=\""+aIcon[j]+"\" type=\"text\" onchange=\"updateID.chgID(this,'__CONTROLLER__/chgIconID'>");
                     }else if(j=="ari_cname"){
                         $(td).html(aIcon[j]);
                         var tdIconShow = document.createElement("td");
@@ -168,12 +194,9 @@
                     $(tr).append($(td));
                 }
                 var td2 = document.createElement("td");
-                //td2.innerHTML = "<td> <a href=\"__CONTROLLER__/editIcon/ari_id/"+aIcon['ari_id']+"}\" class=\"btn btn-success btn-xs\"> <i class=\"fa fa-edit\"></i> </a> <a  href=\"__CONTROLLER__/deleteIcon/ari_id/"+aIcon['ari_id']+"\" class=\"btn btn-primary btn-xs\"> <i class=\"fa fa-trash-o\"></i> </a> </td>";
-                //tr.appendChild(td2);
-
                 $(td2).html("<a href=\"__CONTROLLER__/editIcon/ari_id/"+aIcon['ari_id']+"}\" class=\"btn btn-success btn-xs\"> <i class=\"fa fa-edit\"></i> </a> <a  href=\"__CONTROLLER__/deleteIcon/ari_id/"+aIcon['ari_id']+"\" class=\"btn btn-primary btn-xs\"> <i class=\"fa fa-trash-o\"></i> </a>");
                 $(tr).append($(td2));
-                $("#myIconClose").click();
+                $("#addIcon").modal("hide");
                 $(".table").append($(tr));
 
             }else{
@@ -184,19 +207,55 @@
 
     }
 
-    var chgidURL = "__CONTROLLER__/chgID";
-    function chgID(chgInput){
-        var oldval = chgInput.getAttribute("oldval");
-        var val = chgInput.value;
+    var getIconURL = "__CONTROLLER__/getIcon";
+    function getIcon(a){
+        $.post(getIconURL,{"iid":$(a).attr("iid")},function(data){
+            $("#editIcon #e_ari_id").val(data['ari_id']);
+            $("#editIcon #e_name").val(data['ari_name']);
+            $("#editIcon #e_ename").val(data['ari_ename']);
+            $("#editIcon #e_cname").val(data['ari_cname']);
+            $('#editIcon').modal();
+        });
+    }
 
-        $.post(chgidURL,{"oldid":oldval,"newid":val},function(data){
-            //console.log(data);
-            chgInput.setAttribute("oldval",val);
+    var updateIconURL = "__CONTROLLER__/updateIcon";
+    function updateIcon(){
+        $("#editIconForm").ajaxSubmit({
+            type:'post',
+            url: updateIconURL,
+            beforeSubmit: function(){
+                $("#editIcon").modal("hide");
+                myAlert.setMsg("数据更新中...");
+                myAlert.show();
+            },
+            success: function(res){
+                if(res['rs'] == 1){ // 成功
+                    // TODO 更新新数据
+
+
+                }else{              // 失败
+                    console.log("失败");
+                }
+                myAlert.setMsg(res['msg']);
+            },
+            resetForm: false,
+            clearForm: false
+        });
+    }
+
+    var delIconURL = "__CONTROLLER__/delIcon";
+    function delIcon(a){
+        $.post(delIconURL,{"iid":$(a).attr("iid")},function(data){
+            if(data['rs'] == 1){
+                $(a).parent().parent().remove();
+            }else{
+
+            }
             myAlert.setMsg(data['msg']);
             myAlert.show();
         });
-
     }
+
 
 </script>
 

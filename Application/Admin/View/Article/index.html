@@ -475,7 +475,15 @@
 
     var delArticleURL = "__CONTROLLER__/delArticle";
     function delArticle(){
+        $.post(delArticleURL,{"aid":$(a).attr("aid")},function(data){
+            if(data['rs'] == 1){
+                $(a).parent().parent().remove();
+            }else{
 
+            }
+            myAlert.setMsg(data['msg']);
+            myAlert.show();
+        });
     }
 
 </script>

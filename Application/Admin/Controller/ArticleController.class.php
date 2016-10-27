@@ -19,10 +19,12 @@ use Think\Upload;
 class ArticleController extends BaseController {
 
     private $articleM;
+    private $articleIconM;
 
     public function __construct(){
         parent::__construct();
         $this->articleM = new ArticleModel();
+        $this->articleIconM = new ArticleIconModel();
     }
 
     public function index(){
@@ -242,9 +244,75 @@ class ArticleController extends BaseController {
         }
     }
 
-    public function chgID(){
-
+    public function getIcon(){
+        $iid = I("iid");
+        $icon = $this->articleIconM->where(array("ari_id"=>$iid))->find();
+        $this->ajaxReturn($icon);
     }
+
+    public function updateIcon(){
+        if(IS_AJAX){
+            $data['ari_id']     = I("ari_id");
+            $data['ari_name']   = I("ari_name");
+            $data['ari_ename']  = I("ari_ename");
+            $data['ari_cname']  = I("ari_cname");
+
+            $rs = $this->articleIconM->where(array("ari_id"=>$data['ari_id']))->save($data);
+            if($rs){
+                $aIcon = $this->articleIconM->where(array("ari_id"=>$rs))->find();
+                $res['rs'] = $rs;
+                $res['msg'] = "图标修改成功";
+                $res['info'] = $aIcon;
+            }else{
+                $res['rs'] = 0;
+                $res['msg'] = "图标修改失败";
+                $res['info'] = 0;
+            }
+            $this->ajaxReturn($res);
+        }
+    }
+
+    public function delIcon(){
+        if($_POST){
+            $iid = I("iid");
+
+            $rs = $this->articleM->where(array('ari_id'=>$iid))->delete();
+            if($rs){
+                $res['rs'] = 1;
+                $res['msg'] = "删除成功";
+                $res['info'] = 1;
+            }else{
+                $res['rs'] = 0;
+                $res['msg'] = "删除失败";
+                $res['info'] = 0;
+            }
+            $this->ajaxReturn($res);
+        }
+    }
+
+    public function chgIconID(){
+        if(IS_AJAX){
+            $oldid = I("oldid");
+            $newid = I("newid");
+
+            $rs = $this->articleIconM->where(array("ari_id"=>$oldid))->setField("ari_id",$newid);
+
+            if($rs){
+                $articleIcon = $this->articleIconM->where(array("ari_id"=>$newid))->find();
+                $res['rs'] = $rs;
+                $res['msg'] = "ID修改成功";
+                $res['info'] = $articleIcon;
+            }else{
+                $res['rs'] = $rs;
+                $res['msg'] = "ID修改失败";
+                $res['info'] = 0;
+            }
+
+            $this->ajaxReturn($res);
+        }
+    }
+
+
 
     /** 异步请求 文章管理 */
     public function addArticle(){
