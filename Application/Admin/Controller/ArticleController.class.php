@@ -238,4 +238,17 @@ class ArticleController extends BaseController {
 
     }
 
+    /** 异步请求 文章管理 */
+    public function addArticle(){
+
+    }
+
+
+
+
+
+
+
+
+
 }
