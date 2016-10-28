@@ -14,23 +14,55 @@ use Think\Controller;
 
 class TopicController extends Controller{
 
-    public function cates(){
-        $topicCateM = new TopicCateModel();
-        $topiccates = $topicCateM->select();
-        $this->ajaxReturn($topiccates);
+    private $topicCateM;
+    private $topicM;
+
+    public function __construct(){
+        parent::__construct();
+        $this->topicCateM   = new TopicCateModel();
+        $this->topicM       = new TopicModel();
+    }
+
+    public function categorys(){
+        $categorys = $this->topicCateM->select();
+        if($categorys){
+            $res['rs'] = 1;
+            $res['msg'] = "话题分类获取成功";
+            $res['info'] = $categorys;
+        }else{
+            $res['rs'] = 1;
+            $res['msg'] = "话题分类获取失败";
+            $res['info'] = 0;
+        }
+        $this->ajaxReturn($res);
 
     }
 
     public function topics(){
-        $topicM = new TopicModel();
-        $topicCateM = new TopicCateModel();
-
         if($_GET){
             $cid = I("cid");
             if($cid == 0){
-                $res = $topicM->select();
+                $topics = $this->topicM->select();
+                if($topics){
+                    $res['rs'] = 1;
+                    $res['msg'] = "话题获取成功";
+                    $res['info'] = $topics;
+                }else{
+                    $res['rs'] = 1;
+                    $res['msg'] = "话题获取失败";
+                    $res['info'] = 0;
+                }
             }else{
-                $res = $topicM->where(array("cateid"=>$cid))->select();
+                $topics = $this->topicM->where(array("cateid"=>$cid))->select();
+                if($topics){
+                    $res['rs'] = 1;
+                    $res['msg'] = "话题获取成功";
+                    $res['info'] = $topics;
+                }else{
+                    $res['rs'] = 1;
+                    $res['msg'] = "话题获取失败";
+                    $res['info'] = 0;
+                }
             }
             $this->ajaxReturn($res);
         }

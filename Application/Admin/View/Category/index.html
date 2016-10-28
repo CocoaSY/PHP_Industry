@@ -373,6 +373,11 @@
 </div>
 
 <script type="text/javascript" language="JavaScript">
+    var ue = UE.getEditor('content',{
+        initialFrameWidth:500,
+        initialFrameHeight:200
+    });
+
     var addCategoryURL = "__CONTROLLER__/addCategory";
     function addCategory(){
         $("#addCategoryForm").ajaxSubmit({
@@ -436,6 +441,12 @@
             if(data['cate_pic'].length>0){
                 $("#editCategory img").attr("src",data['cate_pic']);
             }
+
+            var ue2 = UE.getEditor('e_content',{
+                initialFrameWidth:500,
+                initialFrameHeight:200
+            });
+
             $('#editCategory').modal();
         });
     }
