@@ -18,15 +18,21 @@ use Think\Controller;
 
 class UserController extends Controller{
 
-    public function checkLogin($userID,$token){
+    private $userM;
+    private $userInfoM;
 
-        $userM = new UserModel();
-        $userinfoM = new UserInfoModel();
+    public function __construct(){
+        parent::__construct();
+        $this->userM        = new UserModel();
+        $this->userInfoM    = new UserInfoModel();
+    }
+
+    private function checkLogin($userID,$token){
 
         if(empty($userID)||empty($token)) return false;
 
-        $user = $userM->where(array("u_id"=>$userID))->find();
-        $userInfo = $userinfoM->where(array("uid"=>$userID))->find();
+        $user = $this->userM->where(array("u_id"=>$userID))->find();
+        $userInfo = $this->userInfoM->where(array("uid"=>$userID))->find();
 
         $cTime = time();
         if($cTime<$userInfo['outdated']){
@@ -43,10 +49,10 @@ class UserController extends Controller{
         }
     }
 
+    /**
+     * 用户注册接口
+     */
     public function regis(){
-
-        $user = new UserModel();
-        $userinfo = new UserInfoModel();
 
         if(IS_POST){
             $data['username'] = I("username");
@@ -56,37 +62,48 @@ class UserController extends Controller{
 
             $return = array();
 
-            if($user->create($data)){
-                $rs = $user->add($data);
-                if($rs){
+            if($this->userM->create($data)){           // 用户注册数据验证成功
+                $rs = $this->userM->add($data);
+                if($rs){            // 用户注册成功
 
                     $uinfo["uid"] = $rs;
                     $uinfo["email"] = $data['email'];
-                    $userinfo->add($uinfo);
+                    $this->userInfoM->add($uinfo);
 
-                    $return['rs'] = 1;
+                    //$return['rs'] = 1;
                     $return['uid'] = $rs;
                     $return['username'] = $data['username'];
+
+                    $res['rs'] = 1;
+                    $res['msg'] = "用户注册成功";
+                    $res['info'] = $return;
                 }
-                else {
-                    $return['rs'] = 0;
+                else {              // 用户注册失败
+                    //$return['rs'] = 0;
+                    $res['rs'] = 0;
+                    $res['msg'] = "用户注册失败";
+                    $res['info'] = 0;
                 }
 
-                $this->ajaxReturn($return);
-            }else{
-                $return['rs'] = "error";
-                $this->ajaxReturn($return);
+
+            }else{                              // 用户注册数据验证失败
+                //$return['rs'] = "error";
+                $res['rs'] = 0;
+                $res['msg'] = "用户注册数据验证失败";
+                $res['info'] = 0;
             }
+
+            $this->ajaxReturn($res);
 
 
         }
 
     }
 
+    /**
+     * 用户登录接口
+     */
     public function login(){
-
-        $userM = new UserModel();
-        $userinfoM = new UserInfoModel();
 
         if(IS_POST){
 
@@ -95,17 +112,23 @@ class UserController extends Controller{
 
             $return = array();
 
-            $user = $userM->where(array("username"=>$username))->find();
+            $user = $this->userM->where(array("username"=>$username))->find();
             if($user){
                 if(checkPass($user['u_id'],$password)){
 
-                    $userinfo = $userinfoM->where(array("uid"=>$user['u_id']))->find();
+                    $userinfo = $this->userInfoM->where(array("uid"=>$user['u_id']))->find();
                     $islock = $user['islock'];
 
                     if($islock!=0){//用户被锁定
                         $return['err'] = "0403";
-                        $return['info'] = "用户被锁定";
+
+                        $res['rs'] = 0;
+                        $res['msg'] = "用户被锁定";
+                        $res['info'] = $return;
+
                     }else{
+
+                        // 验证token是否过期
                         $token = $userinfo['token'];
                         $outdated = $userinfo['outdated'];
 
@@ -113,7 +136,7 @@ class UserController extends Controller{
                         if($cTime<$outdated){
                             $info['token'] = $token;
                             $info['outdated'] = $outdated;
-                        }else{ //token过期 登录添加积分 重新计算token和过期时间
+                        }else{      //token过期 登录添加积分 重新计算token和过期时间
                             $info['integral'] = $userinfo['integral'] + C(INTEGRAL_LOGIN);
                             $info['token'] = md5($cTime);
                             $info['outdated'] = $cTime+24*60*60;
@@ -122,12 +145,9 @@ class UserController extends Controller{
                         $info['logintime'] = $cTime;
                         $info['loginip'] = get_client_ip();
 
-                        $userinfoM->where(array("uid"=>$user['u_id']))->save($info);
+                        $this->userInfoM->where(array("uid"=>$user['u_id']))->save($info); // 保存token和过期时间
 
-                        $return['info'] = "登录成功";
-                        $return['err']  = 0;
-
-                        $returnuser = $userinfoM
+                        $returnuser = $this->userInfoM
                                         ->field(array("z_user.u_id as uid","z_user.username","z_user.email","z_user.regtime","z_user_info.nickname","z_user_info.sex","z_user_info.job","z_location_province.name as province","z_location_city.name as city","z_location_district.name as district","z_user_info.intro","z_user_info.face50","z_user_info.face80","z_user_info.face180","z_user_info.integral","z_user_info.token"))
                                         ->join("Right JOIN __USER__              ON __USER_INFO__.uid          = __USER__.u_id")
                                         ->join("LEFT JOIN  __LOCATION_PROVINCE__ ON __USER_INFO__.provinceid   = __LOCATION_PROVINCE__.id")
@@ -138,26 +158,40 @@ class UserController extends Controller{
 
                         $return['user'] = $returnuser;
                         $return['token'] = $info['token'];
+
+                        $res['rs'] = 1;
+                        $res['msg'] = "登录成功";
+                        $res['info'] = $return;
+
                     }
                 }else{
                     //密码不正确
                     $return['err'] = 0401;
-                    $return['info'] = "登录失败";
+
+                    $res['rs'] = 0;
+                    $res['msg'] = "登录失败,密码不正确";
+                    $res['info'] = $return;
                 }
             }else{
                 //用户不存在
                 $return['err'] = 0402;
-                $return['info'] = "用户不存在";
+
+                $res['rs'] = 0;
+                $res['msg'] = "用户不存在";
+                $res['info'] = $return;
             }
-            $this->ajaxReturn($return);
+            $this->ajaxReturn($res);
         }
 
 
     }
 
+    /**
+     * 用户退出登录接口
+     */
     public function logout(){
-        $userM = new UserModel();
-        $userinfoM = new UserInfoModel();
+//        $userM = new UserModel();
+//        $userinfoM = new UserInfoModel();
 
         if(IS_POST){
             $return = array();
@@ -170,24 +204,33 @@ class UserController extends Controller{
             $isLogin = $this->checkLogin($userid,$token);
 
             if($isLogin){
-                $user = $userM->where(array("u_id"=>$userid))->find();
-                $userinfo = $userinfoM->where(array("uid"=>$userid))->find();
+                $user = $this->userM->where(array("u_id"=>$userid))->find();
+                $userinfo = $this->userInfoM->where(array("uid"=>$userid))->find();
 
                 $info['outdated'] = time();
-                $userinfo = $userinfoM->where(array("uid"=>$userid))->save($info);
+                $userinfo = $this->userInfoM->where(array("uid"=>$userid))->save($info);
 
-                $return['err'] = 0;
+                //退出登录成功
+                $res['rs'] = 1;
+                $res['msg'] = "退出登录成功";
+                $res['info'] = 0;
             }else{
                 //用户未登录
                 $return['err'] = "0404";
-                $return['info'] = "用户还未登录";
+
+                $res['rs'] = 0;
+                $res['msg'] = "用户还未登录";
+                $res['info'] = $return;
             }
 
 
-            $this->ajaxReturn($return);
+            $this->ajaxReturn($res);
         }
     }
 
+    /**
+     * 获取用户信息接口
+     */
     public function userInfo(){
 
         $userM = new UserModel();
@@ -213,20 +256,29 @@ class UserController extends Controller{
                                 ->where(array("u_id"=>$userid))
                                 ->find();
 
-                    $return['err'] = 0;
-                    $return['info'] = $userinfo;
+                    $res['rs'] = 1;
+                    $res['msg'] = "用户信息获取成功";
+                    $res['info'] = $userinfo;
+
                 }else{
                     //用户被锁定
                     $return['err'] = "0403";
-                    $return['info'] = "用户被锁定";
+
+                    $res['rs'] = 0;
+                    $res['msg'] = "用户信息获取失败,用户被锁定";
+                    $res['info'] = $return;
+
                 }
             }else{
                 //用户未登录
                 $return['err'] = "0404";
-                $return['info'] = "用户还未登录";
+
+                $res['rs'] = 0;
+                $res['msg'] = "用户信息获取失败,用户还未登录";
+                $res['info'] = $return;
             }
 
-            $this->ajaxReturn($return);
+            $this->ajaxReturn($res);
         }
 
 
