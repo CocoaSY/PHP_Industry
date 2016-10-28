@@ -35,4 +35,11 @@ class TestController extends Controller{
         dump($returnuser);
     }
 
+    public function testJson2(){
+        $data['rs'] = 1;
+        $data['msg'] = "提示消息";
+        $data['info'] = array("aaa","bbb");
+        $this->ajaxReturn($data);
+    }
+
 }

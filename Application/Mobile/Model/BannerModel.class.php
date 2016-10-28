@@ -13,7 +13,7 @@ use Think\Model;
 
 class BannerModel extends Model{
 
-    public function banners(){
+    public function getBanners(){
         $banners = $this->where("bn_show=1")->select();
         return $banners;
     }

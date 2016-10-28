@@ -14,14 +14,25 @@ use Think\Controller;
 
 class BannerController extends Controller{
 
-    public function index(){
-        $this->banners();
+    private $bannerM;
+
+    public function __construct(){
+        parent::__construct();
+        $this->bannerM = new BannerModel();
     }
 
     public function banners(){
-        $banner = new BannerModel();
-        $banners = $banner->banners();
-        //dump($banners);
-        $this->ajaxReturn($banners);
+        $banners = $this->bannerM->getBanners();
+        if($banners){
+            $res['rs'] = 1;
+            $res['msg'] = "横幅获取成功";
+            $res['info'] = $banners;
+        }else{
+            $res['rs'] = 0;
+            $res['msg'] = "横幅获取失败";
+            $res['info'] = 0;
+        }
+        $this->ajaxReturn($res);
     }
+
 }
