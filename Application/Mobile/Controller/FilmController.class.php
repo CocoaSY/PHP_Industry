@@ -41,7 +41,7 @@ class FilmController extends BaseController{
     }
 
     public function films(){
-        if(IS_POST){
+        if(IS_POST || IS_GET){
             $cid = I("cid");
             if($cid == 0){
                 $sql = "SELECT a.fid AS 'fid',a.cid AS 'cid',a.name AS 'name',a.ename AS 'ename',a.description AS 'desc',a.pic AS 'pic',a.pic80 AS 'pic80',b.vid AS 'vid',b.type AS 'type',b.size AS 'size',b.path AS 'videoURL' FROM z_film AS a LEFT JOIN z_video AS b ON b.vid=a.video";
@@ -56,7 +56,7 @@ class FilmController extends BaseController{
                     $res['info'] = 0;
                 }
             }else{
-                $sql = "SELECT a.fid AS 'fid',a.cid AS 'cid',a.name AS 'name',a.ename AS 'ename',a.description AS 'desc',a.pic AS 'pic',a.pic80 AS 'pic80',b.vid AS 'vid',b.type AS 'type',b.size AS 'size',b.path AS 'videoURL' FROM z_film AS a LEFT JOIN z_video AS b ON b.vid=a.video WHENEVER a.cid=".$cid;
+                $sql = "SELECT a.fid AS 'fid',a.cid AS 'cid',a.name AS 'name',a.ename AS 'ename',a.description AS 'desc',a.pic AS 'pic',a.pic80 AS 'pic80',b.vid AS 'vid',b.type AS 'type',b.size AS 'size',b.path AS 'videoURL' FROM z_film AS a LEFT JOIN z_video AS b ON b.vid=a.video WHERE a.cid=".$cid;
                 $films = $this->filmM->query($sql);
                 if($films){
                     $res['rs'] = 1;
@@ -70,6 +70,8 @@ class FilmController extends BaseController{
             }
             $this->ajaxReturn($res);
         }
+
+
     }
 
 
