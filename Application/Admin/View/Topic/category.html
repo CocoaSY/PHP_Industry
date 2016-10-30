@@ -45,10 +45,10 @@
                                 <td>{$ele.name}</td>
                                 <td>{$ele.ename}</td>
                                 <td>
-                                    <a href="__CONTROLLER__/editCate/t_id/{$ele.t_id}" class="btn btn-success btn-xs">
+                                    <a cid="{$ele.t_id}" onclick="getCategory(this)" class="btn btn-success btn-xs">
                                         <i class="fa fa-edit"></i>
                                     </a>
-                                    <a  href="__CONTROLLER__/deleteACate/t_id/{$ele.t_id}" class="btn btn-primary btn-xs">
+                                    <a cid="{$ele.t_id}" onclick="delCategory(this)" class="btn btn-primary btn-xs">
                                         <i class="fa fa-trash-o"></i>
                                     </a>
                                 </td>
@@ -103,8 +103,40 @@
     </div>
 </div>
 
+<div class="modal fade" id="editTopicCate"  >
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">编辑话题分类</h4>
+            </div>
+            <form id="editTopicCateForm" class="form-horizontal" role="form" method="post">
+                <input hidden="yes" id="e_cid" name="cid">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="e_name" class="col-lg-2 col-sm-2 control-label">名称</label>
+                        <div class="col-lg-10">
+                            <input name="name" type="text" class="form-control" id="e_name">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="e_ename" class="col-lg-2 col-sm-2 control-label">英文名称</label>
+                        <div class="col-lg-10">
+                            <input name="ename" type="text" class="form-control" id="e_ename">
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-success"type="button" onclick="updateCategory()">提交话题</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <script type="text/javascript" language="JavaScript">
-    var addCategory = "__MODULE__/Topic/addCategory";
+    var addCategory = "__CONTROLLER__/addCategory";
     function addCate(){
         $.post(addCategory,$("#addCate").serialize(),function(res){
             $("#addCateClose").click();
@@ -130,6 +162,55 @@
         });
 
     }
+
+    var getCategoryURL = "__CONTROLLER__/getCategory";
+    function getCategory(a){
+        $.post(getCategoryURL,{"cid":$(a).attr("cid")},function(data){
+            $("#editTopicCate #e_cid").val(data['t_id']);
+            $("#editTopicCate #e_name").val(data['name']);
+            $("#editTopicCate #e_ename").val(data['ename']);
+            $("#editTopicCate").modal();
+        });
+    }
+
+    var updateCategoryURL = "__CONTROLLER__/updateCategory";
+    function updateCategory(){
+        $("#editTopicCateForm").ajaxSubmit({
+            type:'post',
+            url: updateCategoryURL,
+            beforeSubmit: function(){
+                $("#editTopicCate").modal("hide");
+                myAlert.setMsg("数据更新中...");
+                myAlert.show();
+            },
+            success: function(res){
+                if(res['rs'] == 1){ // 成功
+                    // TODO 更新新数据
+
+
+                }else{              // 失败
+                    console.log("失败");
+                }
+                myAlert.setMsg(res['msg']);
+            },
+            resetForm: false,
+            clearForm: false
+        });
+    }
+
+    var delCategoryURL = "__CONTROLLER__Topic/delCategory";
+    function delCategory(a){
+        $.post(delCategoryURL,{"cid":$(a).attr("cid")},function(data){
+            if(data['rs'] == 1){
+                $(a).parent().parent().remove();
+            }else{
+
+            }
+            myAlert.setMsg(data['msg']);
+            myAlert.show();
+        });
+    }
+
 </script>
 
 
