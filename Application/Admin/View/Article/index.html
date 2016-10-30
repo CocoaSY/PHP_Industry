@@ -437,6 +437,8 @@
 
             if(data['ar_pic'].length>0){
                 $("#editArticle img").attr("src",data['ar_pic']);
+            }else{
+                $("#editArticle img").attr("src","http://www.placehold.it/200x150/EFEFEF/AAAAAA&amp;text=no+image");
             }
 
             var ue2 = UE.getEditor('e_content',{
