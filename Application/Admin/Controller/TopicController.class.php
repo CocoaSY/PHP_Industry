@@ -11,6 +11,8 @@ namespace Admin\Controller;
 
 use Admin\Model\TopicCateModel;
 use Admin\Model\TopicModel;
+use Think\Image;
+use Think\Upload;
 
 class TopicController extends BaseController{
 
@@ -81,11 +83,38 @@ class TopicController extends BaseController{
 
         $topiccateM = new TopicCateModel();
         if(IS_POST){
-            $data['name'] = I("tcatename");
-            $data['ename'] = I("tcateename");
+            $data['name']           = I("name");
+            $data['ename']          = I("ename");
+            $data['description']    = I("desc");
+
+            $upConfig = C("upTopicCate");
+            $upload = new Upload($upConfig);
+            $info = $upload->upload();
+            if($info){
+                $file = $info['pic']['savename'];
+                $ext = ".".$info['pic']['ext'];
+                $filename = substr($file,0,strlen($file)-strlen($ext));
+
+                $oPath = $info['pic']['savepath'].$file;
+                $pic50 = $info['pic']['savepath'].$filename."X50".$ext;
+                $pic100 = $info['pic']['savepath'].$filename."X100".$ext;
+                $pic200 = $info['pic']['savepath'].$filename."X200".$ext;
+
+                $img = new Image();
+                $img->open($oPath);
+                $img->thumb(50,50)->save($pic50);
+                $img->thumb(100,100)->save($pic100);
+                $img->thumb(200,200)->save($pic200);
+
+                $data['pic']    = __ROOT__.substr($oPath,1);
+                $data['pic50']  = __ROOT__.substr($pic50,1);
+                $data['pic100'] = __ROOT__.substr($pic100,1);
+                $data['pic200'] = __ROOT__.substr($pic200,1);
+            }
+
             $rs = $topiccateM->add($data);
             if($rs){
-                $cate = $topiccateM->where(array("t_id"=>$rs))->find();
+                $cate = $topiccateM->where(array("cid"=>$rs))->find();
                 $res['rs']=1;
                 $res['msg']="数据插入成功";
                 $res['info']=$cate;
@@ -101,18 +130,58 @@ class TopicController extends BaseController{
 
     public function getCategory(){
         $cid = I("cid");
-        $category = $this->topicCateM->where(array("t_id"=>$cid))->find();
+        $category = $this->topicCateM->where(array("cid"=>$cid))->find();
         $this->ajaxReturn($category);
     }
 
     public function updateCategory(){
         if(IS_POST){
-            $data['t_id'] = I("cid");
-            $data['name'] = I("name");
-            $data['ename'] = I("ename");
-            $rs = $this->topicCateM->where(array("t_id"=>$data['t_id']))->save($data);
+            $data['cid']            = I("cid");
+            $data['name']           = I("name");
+            $data['ename']          = I("ename");
+            $data['description']    = I("desc");
+
+            //更改图片
+            $upConfig = C("upTopicCate");
+            $upload = new Upload($upConfig);
+            $info = $upload->upload();
+            if($info){
+                $file = $info['pic']['savename'];
+                $ext = ".".$info['pic']['ext'];
+                $filename = substr($file,0,strlen($file)-strlen($ext));
+
+                $oPath = $info['pic']['savepath'].$file;
+                $pic50 = $info['pic']['savepath'].$filename."X50".$ext;
+                $pic100 = $info['pic']['savepath'].$filename."X100".$ext;
+                $pic200 = $info['pic']['savepath'].$filename."X200".$ext;
+
+                $img = new Image();
+                $img->open($oPath);
+                $img->thumb(50,50)->save($pic50);
+                $img->thumb(100,100)->save($pic100);
+                $img->thumb(200,200)->save($pic200);
+
+                // 保存新图片
+                $data['pic']    = __ROOT__.substr($oPath,1);
+                $data['pic50']  = __ROOT__.substr($pic50,1);
+                $data['pic100'] = __ROOT__.substr($pic100,1);
+                $data['pic200'] = __ROOT__.substr($pic200,1);
+
+                // 删除原始图片
+                $topicCate = $this->topicCateM->where(array('cid'=>$data['cid']))->find();
+                $delfile_o      = ".".substr($topicCate['pic'],strlen(__ROOT__));
+                $delfile_50     = ".".substr($topicCate['pic50'],strlen(__ROOT__));
+                $delfile_100    = ".".substr($topicCate['pic100'],strlen(__ROOT__));
+                $delfile_200    = ".".substr($topicCate['pic200'],strlen(__ROOT__));
+                unlink($delfile_o);
+                unlink($delfile_50);
+                unlink($delfile_100);
+                unlink($delfile_200);
+            }
+
+            $rs = $this->topicCateM->where(array("cid"=>$data['cid']))->save($data);
             if($rs){
-                $cate = $this->topicCateM->where(array("t_id"=>$rs))->find();
+                $cate = $this->topicCateM->where(array("cid"=>$rs))->find();
                 $res['rs']=1;
                 $res['msg']="数据更新成功";
                 $res['info']=$cate;
@@ -128,8 +197,7 @@ class TopicController extends BaseController{
     public function delCategory(){
         if($_POST){
             $cid = I("cid");
-
-            $rs = $this->topicCateM->where(array('t_id'=>$cid))->delete();
+            $rs = $this->topicCateM->where(array('cid'=>$cid))->delete();
             if($rs){
                 $res['rs'] = 1;
                 $res['msg'] = "删除成功";

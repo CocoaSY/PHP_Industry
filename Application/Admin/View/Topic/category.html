@@ -35,20 +35,26 @@
                             <th>#</th>
                             <th>中文名称</th>
                             <th>英文名称</th>
+                            <th>缩略图</th>
                             <td>基本操作</td>
                         </tr>
                         </thead>
                         <tbody>
                         <volist name="tcates" id="ele">
                             <tr>
-                                <td>{$ele.t_id}</td>
+                                <td>{$ele.cid}</td>
                                 <td>{$ele.name}</td>
                                 <td>{$ele.ename}</td>
                                 <td>
-                                    <a cid="{$ele.t_id}" onclick="getCategory(this)" class="btn btn-success btn-xs">
+                                    <if condition="$ele['pic50'] neq ''">
+                                        <img src="{$ele.pic50}" width="50" height="50">
+                                    </if>
+                                </td>
+                                <td>
+                                    <a cid="{$ele.cid}" onclick="getCategory(this)" class="btn btn-success btn-xs">
                                         <i class="fa fa-edit"></i>
                                     </a>
-                                    <a cid="{$ele.t_id}" onclick="delCategory(this)" class="btn btn-primary btn-xs">
+                                    <a cid="{$ele.cid}" onclick="delCategory(this)" class="btn btn-primary btn-xs">
                                         <i class="fa fa-trash-o"></i>
                                     </a>
                                 </td>
@@ -78,24 +84,54 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                 <h4 class="modal-title">添加话题分类</h4>
             </div>
-            <form id="addCate" class="form-horizontal" role="form" method="post">
+            <form id="addTopicCateForm" class="form-horizontal" role="form" method="post">
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="inputTcateName" class="col-lg-2 col-sm-2 control-label">名称</label>
+                        <label for="cname" class="col-lg-2 col-sm-2 control-label">名称</label>
                         <div class="col-lg-10">
-                            <input name="tcatename" type="text" class="form-control" id="inputTcateName">
+                            <input name="name" type="text" class="form-control" id="cname">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="inputTcateEname" class="col-lg-2 col-sm-2 control-label">英文名称</label>
+                        <label for="cename" class="col-lg-2 col-sm-2 control-label">英文名称</label>
                         <div class="col-lg-10">
-                            <input name="tcateename" type="text" class="form-control" id="inputTcateEname">
+                            <input name="ename" type="text" class="form-control" id="cename">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="cdesc" class="col-lg-2 col-sm-2 control-label">描述</label>
+                        <div class="col-lg-10">
+                            <input name="desc" type="text" class="form-control" id="cdesc">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="panel-body">
+                            <div class="form-group last">
+                                <div class="col-md-4">
+                                    <div class="fileupload fileupload-new" data-provides="fileupload">
+                                        <div class="fileupload-new thumbnail" >
+                                            <img src="http://www.placehold.it/200x150/EFEFEF/AAAAAA&amp;text=no+image" alt="">
+                                        </div>
+                                        <div class="fileupload-preview fileupload-exists thumbnail" ></div>
+                                        <div>
+                                            <span class="btn btn-white btn-file">
+                                                    <span class="fileupload-new"><i class="fa fa-paper-clip"></i>选择图片</span>
+                                                    <span class="fileupload-exists"><i class="fa fa-undo"></i>更改</span>
+                                                    <input name="pic" type="file" class="default">
+                                                </span>
+                                            <a href="#" class="btn btn-danger fileupload-exists" data-dismiss="fileupload">
+                                                <i class="fa fa-trash"></i>移除
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
                 </div>
                 <div class="modal-footer">
-                    <button id="addCateClose" data-dismiss="modal" class="btn btn-default" type="button">关闭</button>
                     <button class="btn btn-success"type="button" onclick="addCate()">提交话题</button>
                 </div>
             </form>
@@ -126,6 +162,38 @@
                         </div>
                     </div>
 
+                    <div class="form-group">
+                        <label for="e_desc" class="col-lg-2 col-sm-2 control-label">描述</label>
+                        <div class="col-lg-10">
+                            <input name="desc" type="text" class="form-control" id="e_desc">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="panel-body">
+                            <div class="form-group last">
+                                <div class="col-md-4">
+                                    <div class="fileupload fileupload-new" data-provides="fileupload">
+                                        <div class="fileupload-new thumbnail" >
+                                            <img src="http://www.placehold.it/200x150/EFEFEF/AAAAAA&amp;text=no+image" alt="">
+                                        </div>
+                                        <div class="fileupload-preview fileupload-exists thumbnail" ></div>
+                                        <div>
+                                            <span class="btn btn-white btn-file">
+                                                    <span class="fileupload-new"><i class="fa fa-paper-clip"></i>选择图片</span>
+                                                    <span class="fileupload-exists"><i class="fa fa-undo"></i>更改</span>
+                                                    <input name="pic" type="file" class="default">
+                                                </span>
+                                            <a href="#" class="btn btn-danger fileupload-exists" data-dismiss="fileupload">
+                                                <i class="fa fa-trash"></i>移除
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-success"type="button" onclick="updateCategory()">提交话题</button>
@@ -136,40 +204,47 @@
 </div>
 
 <script type="text/javascript" language="JavaScript">
-    var addCategory = "__CONTROLLER__/addCategory";
+    var addCategoryURL = "__CONTROLLER__/addCategory";
     function addCate(){
-        $.post(addCategory,$("#addCate").serialize(),function(res){
-            $("#addCateClose").click();
-            console.log(res);
-            if(res['rs']==1){
-                var tr = document.createElement("tr");
-                for(var i in res['info']){
-                    var td = document.createElement("td");
-                    td.innerHTML = res['info'][i];
-                    tr.appendChild(td);
+        $("#addTopicCateForm").ajaxSubmit({
+            type:'post',
+            url: addCategoryURL,
+            beforeSubmit: function(){
+                $("#addTopicCate").modal("hide");
+                myAlert.setMsg("数据上传中...");
+                myAlert.show();
+            },
+            success: function(data){
+                var res = zsy_json_decode(data);
+                if(res['rs'] == 1){ // 成功
+                    // TODO 插入新数据
+
+
+                }else{              // 失败
+                    console.log("失败");
                 }
-                var aTD = document.createElement("td");
-                aTD.innerHTML = "<a href=\"__CONTROLLER__/editCate/t_id/"+res['info']['t_id']+"\" class=\"btn btn-success btn-xs\"> <i class=\"fa fa-edit\"></i> </a> <a  href=\"__CONTROLLER__/deleteACate/t_id/"+res['info']['t_id']+"\" class=\"btn btn-primary btn-xs\"> <i class=\"fa fa-trash-o\"></i> </a>";
-                tr.appendChild(aTD);
-
-                var tcate = document.getElementById("tcate");
-                var tbody = tcate.getElementsByTagName("tbody")[0];
-                tbody.appendChild(tr);
-
-            }
-            myAlert.setMsg(res['msg']);
-            myAlert.show();
+                myAlert.setMsg(res['msg']);
+            },
+            resetForm: false,
+            clearForm: false
         });
-
     }
 
     var getCategoryURL = "__CONTROLLER__/getCategory";
     function getCategory(a){
         $.post(getCategoryURL,{"cid":$(a).attr("cid")},function(data){
             var json = zsy_json_decode(data);
-            $("#editTopicCate #e_cid").val(json['t_id']);
+            $("#editTopicCate #e_cid").val(json['cid']);
             $("#editTopicCate #e_name").val(json['name']);
             $("#editTopicCate #e_ename").val(json['ename']);
+            $("#editTopicCate #e_desc").val(json['description']);
+
+            if(json['pic'].length>0){
+                $("#editTopicCate img").attr("src",json['pic']);
+            }else{
+                $("#editTopicCate img").attr("src","http://www.placehold.it/200x150/EFEFEF/AAAAAA&amp;text=no+image");
+            }
+
             $("#editTopicCate").modal("show");
         });
     }
@@ -184,7 +259,8 @@
                 myAlert.setMsg("数据更新中...");
                 myAlert.show();
             },
-            success: function(res){
+            success: function(data){
+                var res = zsy_json_decode(data);
                 if(res['rs'] == 1){ // 成功
                     // TODO 更新新数据
 
