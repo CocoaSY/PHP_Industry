@@ -54,23 +54,23 @@
 
                                 <volist  name="cates" id="ele">
                                     <tr>
-                                        <td><input type="checkbox" class="check" name="dels[]" value="{$ele.cate_id}"></td>
+                                        <td><input type="checkbox" class="check" name="dels[]" value="{$ele.cid}"></td>
                                         <td>
-                                            <input style="width: 50px" class="form-control small" oldval="{$ele.cate_id}" value="{$ele.cate_id}" type="text" onchange="chgID(this)">
+                                            <input style="width: 50px" class="form-control small" oldval="{$ele.cid}" value="{$ele.cid}" type="text" onchange="updateID.chgID(this,'__CONTROLLER__/chgID')">
                                         </td>
-                                        <td class="hidden-phone">{$ele.pre}{$ele.cate_name}</td>
+                                        <td class="hidden-phone">{$ele.pre}{$ele.name}</td>
                                         <td>
-                                            <if condition="$ele['cate_pic'] neq ''">
-                                                <img src="{$ele.cate_pic}" width="30" height="30">
+                                            <if condition="$ele['pic'] neq ''">
+                                                <img src="{$ele.pic}" width="30" height="30">
                                                 <else />
                                                 <span class="label label-info label-mini">NO Pic</span>
                                             </if>
                                         </td>
                                         <td>
-                                            <a class="pid_{$ele.cate_pid}">{$ele.cate_pid}</a>
+                                            <a class="pid_{$ele.pid}">{$ele.pid}</a>
                                         </td>
                                         <td>
-                                            <if condition="$ele['cate_nav'] eq 1">
+                                            <if condition="$ele['nav'] eq 1">
                                                 是
                                                 <else />
                                                 否
@@ -78,14 +78,14 @@
                                         </td>
                                         <td>
                                             <volist name="catetypes" id="vo">
-                                                <if condition="$vo['catet_id'] eq $ele['cate_type']">{$vo.catet_name}</if>
+                                                <if condition="$vo['tid'] eq $ele['type']">{$vo.name}</if>
                                             </volist>
                                         </td>
                                         <td>
-                                            <a cid="{$ele.cate_id}" onclick="getCategory(this)" class="btn btn-success btn-xs">
+                                            <a cid="{$ele.cid}" onclick="getCategory(this)" class="btn btn-success btn-xs">
                                                 <i class="fa fa-edit"></i>
                                             </a>
-                                            <a cid="{$ele.cate_id}" onclick="delCategory(this)" class="btn btn-primary btn-xs">
+                                            <a cid="{$ele.cid}" onclick="delCategory(this)" class="btn btn-primary btn-xs">
                                                 <i class="fa fa-trash-o"></i>
                                             </a>
                                         </td>
@@ -134,7 +134,8 @@
         var val = chgInput.value;console.log(val);
 
         $.post(chgidURL,{"oldid":oldval,"newid":val},function(data){
-            if(data['rs']!=0){
+            var res = zsy_json_decode(data);
+            if(res['rs']!=0){
                 var eles = $(".pid_"+oldval);
                 for(var i=0;i<eles.length;i++){
                     var ele = eles[i];
@@ -142,10 +143,9 @@
                     $(ele).attr("class","pid_"+val);
                 }
                 chgInput.setAttribute("oldval",val);
-            }else{
-                myAlert.setMsg(data['msg']);
-                myAlert.show();
             }
+            myAlert.setMsg(res['msg']);
+            myAlert.show();
         });
 
     }
@@ -168,12 +168,12 @@
 
                     <div class="form-group">
                         <label for="cate_name">栏目名称</label>
-                        <input type="text" class="form-control" id="cate_name" name="cate_name">
+                        <input type="text" class="form-control" id="cate_name" name="name">
                     </div>
 
                     <div class="form-group">
                         <label for="cate_ename">栏目名称(英文)</label>
-                        <input type="text" class="form-control" id="cate_ename" name="cate_ename">
+                        <input type="text" class="form-control" id="cate_ename" name="ename">
                     </div>
 
                     <div class="form-group">
@@ -181,7 +181,7 @@
                         <div>
                             <volist name="catetypes" id="vo">
                                 <label class="checkbox-inline">
-                                    <input id="cate_type" type="radio" name="cate_type" value="{$vo.catet_id}" <if condition="$vo['catet_id'] eq 1">checked</if>>   <span>{$vo.catet_name}</span>
+                                    <input id="cate_type" type="radio" name="type" value="{$vo.tid}" <if condition="$vo['tid'] eq 1">checked</if>>   <span>{$vo.name}</span>
                                 </label>
                             </volist>
                         </div>
@@ -191,28 +191,28 @@
                         <label for="cate_nav">作为导航</label>
                         <div class="checkbox">
                             <label>
-                                <input id="cate_nav" type="checkbox" name="cate_nav" value="1"> 作为导航
+                                <input id="cate_nav" type="checkbox" name="nav" value="1"> 作为导航
                             </label>
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label for="cate_keywords">关键字</label>
-                        <input type="text" class="form-control" id="cate_keywords" name="cate_keywords">
+                        <input type="text" class="form-control" id="cate_keywords" name="keywords">
                     </div>
 
                     <div class="form-group">
                         <label for="cate_desc">栏目描述</label>
-                        <input type="text" class="form-control" id="cate_desc" name="cate_desc">
+                        <input type="text" class="form-control" id="cate_desc" name="desc">
                     </div>
 
                     <div class="form-group">
                         <label class="control-label" >上级栏目</label>
                         <div>
-                            <select class="form-control m-bot15" name="cate_pid">
+                            <select class="form-control m-bot15" name="pid">
                                 <option value="0">顶级栏目</option>
                                 <volist name="cate_pids" id="pid_ele">
-                                    <option value="{$pid_ele['cate_id']}">{$pid_ele['pre']}{$pid_ele['cate_name']}</option>
+                                    <option value="{$pid_ele['cid']}">{$pid_ele['pre']}{$pid_ele['name']}</option>
                                 </volist>
                             </select>
                         </div>
@@ -232,7 +232,7 @@
                                             <span class="btn btn-white btn-file">
                                                     <span class="fileupload-new"><i class="fa fa-paper-clip"></i>选择图片</span>
                                                     <span class="fileupload-exists"><i class="fa fa-undo"></i>更改</span>
-                                                    <input name="cate_pic" type="file" class="default">
+                                                    <input name="pic" type="file" class="default">
                                                 </span>
                                             <a href="#" class="btn btn-danger fileupload-exists" data-dismiss="fileupload">
                                                 <i class="fa fa-trash"></i>移除
@@ -247,7 +247,7 @@
 
                     <div class="form-group">
                         <label for="content">栏目内容</label>
-                        <textarea id="content" name="cate_content"></textarea>
+                        <textarea id="content" name="content"></textarea>
                     </div>
 
                 </form>
@@ -276,16 +276,16 @@
 
                 <form id="editCategoryForm" role="form" action="" method="post" enctype="multipart/form-data">
 
-                    <input hidden="yes" id="e_cate_id" name="cate_id">
+                    <input hidden="yes" id="e_cate_id" name="cid">
 
                     <div class="form-group">
                         <label for="e_cate_name">栏目名称</label>
-                        <input type="text" class="form-control" id="e_cate_name" name="cate_name">
+                        <input type="text" class="form-control" id="e_cate_name" name="name">
                     </div>
 
                     <div class="form-group">
                         <label for="e_cate_ename">栏目名称(英文)</label>
-                        <input type="text" class="form-control" id="e_cate_ename" name="cate_ename">
+                        <input type="text" class="form-control" id="e_cate_ename" name="ename">
                     </div>
 
                     <div id="e_cate_type" class="form-group">
@@ -293,7 +293,7 @@
                         <div>
                             <volist name="catetypes" id="vo">
                                 <label class="checkbox-inline">
-                                    <input type="radio" name="cate_type" value="{$vo.catet_id}"><span>{$vo.catet_name}</span>
+                                    <input type="radio" name="type" value="{$vo.tid}"><span>{$vo.name}</span>
                                 </label>
                             </volist>
                         </div>
@@ -303,28 +303,28 @@
                         <label>作为导航</label>
                         <div class="checkbox">
                             <label>
-                                <input id="e_cate_nav" type="checkbox" name="cate_nav"> 作为导航
+                                <input id="e_cate_nav" type="checkbox" name="nav"> 作为导航
                             </label>
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label for="e_cate_keywords">关键字</label>
-                        <input type="text" class="form-control" id="e_cate_keywords" name="cate_keywords" value="{$aCate.cate_keywords}">
+                        <input type="text" class="form-control" id="e_cate_keywords" name="keywords">
                     </div>
 
                     <div class="form-group">
                         <label for="e_cate_desc">栏目描述</label>
-                        <input type="text" class="form-control" id="e_cate_desc" name="cate_desc" value="{$aCate.cate_desc}">
+                        <input type="text" class="form-control" id="e_cate_desc" name="desc">
                     </div>
 
                     <div class="form-group">
                         <label class="control-label" >上级栏目</label>
                         <div>
-                            <select id="e_cate_pid" class="form-control m-bot15" name="cate_pid">
+                            <select id="e_cate_pid" class="form-control m-bot15" name="pid">
                                 <option value="0">顶级栏目</option>
                                 <volist name="cate_pids" id="pid_ele">
-                                    <option value="{$pid_ele['cate_id']}">{$pid_ele['pre']}{$pid_ele['cate_name']}</option>
+                                    <option value="{$pid_ele['cid']}">{$pid_ele['pre']}{$pid_ele['name']}</option>
                                 </volist>
                             </select>
                         </div>
@@ -358,7 +358,7 @@
 
                     <div class="form-group">
                         <label for="e_content">栏目内容</label>
-                        <textarea id="e_content" name="cate_content"></textarea>
+                        <textarea id="e_content" name="content"></textarea>
                     </div>
 
                 </form>
@@ -410,23 +410,23 @@
     function getCategory(a){
         $.post(getCategoryURL,{"cid":$(a).attr("cid")},function(data){
             var json = zsy_json_decode(data);
-            $("#editCategory #e_cate_id").val(json['cate_id']);
-            $("#editCategory #e_cate_name").val(json['cate_name']);
-            $("#editCategory #e_cate_ename").val(json['cate_ename']);
-            $("#editCategory #e_cate_keywords").val(json['cate_keywords']);
-            $("#editCategory #e_cate_desc").val(json['cate_desc']);
-            $("#editCategory #e_content").val(json['cate_content']);
+            $("#editCategory #e_cate_id").val(json['cid']);
+            $("#editCategory #e_cate_name").val(json['name']);
+            $("#editCategory #e_cate_ename").val(json['ename']);
+            $("#editCategory #e_cate_keywords").val(json['keywords']);
+            $("#editCategory #e_cate_desc").val(json['description']);
+            $("#editCategory #e_content").val(json['content']);
 
             var type = document.getElementById("e_cate_type");
             var sels = type.getElementsByTagName("input");
             for(var i=0;i < sels.length ; i++){
                 var sel = sels[i];
-                if($(sel).val() == json['cate_type']){
+                if($(sel).val() == json['type']){
                     $(sel).prop("checked",true);
                 }
             }
 
-            if(json['cate_nav'] == 1){
+            if(json['nav'] == 1){
                 $("#editCategory #e_cate_nav").prop('checked',true);
             }
 
@@ -434,16 +434,16 @@
             var ops = select.getElementsByTagName("option");
             for(var i=0;i < ops.length ; i++){
                 var op = ops[i];
-                if($(op).val() == json['cate_pid']){
+                if($(op).val() == json['pid']){
                     $(op).prop("selected",true);
                 }
-                if($(op).val() == json['cate_id']){
+                if($(op).val() == json['cid']){
                     $(op).css("display","none");
                 }
             }
 
-            if(json['cate_pic'].length>0){
-                $("#editCategory img").attr("src",json['cate_pic']);
+            if(json['pic'].length>0){
+                $("#editCategory img").attr("src",json['pic']);
             }
 
             var ue2 = UE.getEditor('e_content',{
@@ -484,13 +484,13 @@
     var delCategoryURL = "__CONTROLLER__/delCategory";
     function delCategory(a){
         $.post(delCategoryURL,{"cid":$(a).attr("cid")},function(data){
-            var json = zsy_json_decode(data);
-            if(json['rs'] == 1){
+            var res = zsy_json_decode(data);
+            if(res['rs'] == 1){
                 $(a).parent().parent().remove();
             }else{
 
             }
-            myAlert.setMsg(json['msg']);
+            myAlert.setMsg(res['msg']);
             myAlert.show();
         });
     }

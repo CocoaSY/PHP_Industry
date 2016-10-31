@@ -20,11 +20,11 @@ class CategoryModel extends Model {
     protected $_validate = array(
         //array(验证字段1,验证规则,错误提示,[验证条件,附加规则,验证时间]),
 
-        array('cate_name','require','栏目名称必填!',1,'regex',3),     // cate_name字段 存在性验证 必须验证  验证时间：新增、编辑
-        array('cate_name','','栏目名称不能重复!',1,'unique',1)  ,      // cate_name字段 唯一性验证 必须验证 验证时间：新增
+        array('name','require','栏目名称必填!',1,'regex',3),     // name字段 存在性验证 必须验证  验证时间：新增、编辑
+        array('name','','栏目名称不能重复!',1,'unique',1)  ,      // name字段 唯一性验证 必须验证 验证时间：新增
 
-        //array('cate_ename','require','栏目英文名称必填!',1,'regex',3),     // cate_ename字段 存在性验证 必须验证  验证时间：新增、编辑
-        //array('cate_ename','','栏目英文名称不能重复!',1,'unique',1),        // cate_ename字段 唯一性验证 必须验证 验证时间：新增
+        //array('ename','require','栏目英文名称必填!',1,'regex',3),     // ename字段 存在性验证 必须验证  验证时间：新增、编辑
+        //array('ename','','栏目英文名称不能重复!',1,'unique',1),        // ename字段 唯一性验证 必须验证 验证时间：新增
 
     );
 
@@ -46,14 +46,14 @@ class CategoryModel extends Model {
     }
 
     public function getCateNames_tree(){
-        $data = $this->field(array('cate_id','cate_name','cate_pid'))->select();
+        $data = $this->field(array('cid','name','pid'))->select();
         return $this->_resort($data);
     }
 
     //获取 $cate_id 栏目下的所有子栏目
-    public function getSubids($cate_id){
-        $cates = $this->field(array("cate_id","cate_pid"))->select();
-        return $this->_subids($cates,$cate_id);
+    public function getSubids($cid){
+        $cates = $this->field(array("cid","pid"))->select();
+        return $this->_subids($cates,$cid);
     }
 
     // 递归对所有的分类重新排序
@@ -62,11 +62,11 @@ class CategoryModel extends Model {
         static $ret = array();
 
         foreach($data as $k=>$v){
-            if($v['cate_pid']==$pid){
+            if($v['pid']==$pid){
                 $v['level'] = $level;
                 $v['pre'] = str_repeat('--',$level);
                 array_push($ret,$v);
-                $this->_resort($data,$v['cate_id'],$level+1);
+                $this->_resort($data,$v['cid'],$level+1);
             }
         }
         return $ret;
@@ -74,14 +74,14 @@ class CategoryModel extends Model {
     }
 
     // 递归当前栏目下的所有子栏目
-    private function _subids($cates,$cate_id){
+    private function _subids($cates,$cid){
 
         static $data = array();
 
         foreach($cates as $key=>$cate){
-            if($cate['cate_pid']==$cate_id){
+            if($cate['pid']==$cid){
                 array_push($data,$cate);
-                $this->_subids($cates,$cate['cate_id']);
+                $this->_subids($cates,$cate['cid']);
             }
         }
         return $data;
@@ -94,8 +94,8 @@ class CategoryModel extends Model {
         if($this->delete_model == Delete_Model_One){
             $whe = $options['where']['_string'];
             $whearr = explode("=",$whe);
-            $cate_id = $whearr[1];
-            $soncates = $this->getSubids($cate_id);
+            $cid = $whearr[1];
+            $soncates = $this->getSubids($cid);
             //dump($soncates);
         }elseif($this->delete_model == Delete_Model_Multi){
             $arr = explode("in",$options['where']['_string']);
@@ -109,7 +109,7 @@ class CategoryModel extends Model {
 
             $temp = array();
             foreach($soncates as $k=>$v){
-                array_push($temp,$v['cate_id']);
+                array_push($temp,$v['cid']);
             }
             $soncates = $temp;
             $soncates = array_unique($soncates);
@@ -118,32 +118,32 @@ class CategoryModel extends Model {
         if(!empty($soncates)){
             //dump($soncates);
             $soncates = implode(",",$soncates);//dump($soncates);die;
-            $this->execute("DELETE FROM z_category WHERE cate_id IN ($soncates)");
+            $this->execute("DELETE FROM z_category WHERE cid IN ($soncates)");
         }
         //dump($options);die;
     }
 
 
-    public function deleteCate($cate_id){
+    public function deleteCate($cid){
         $this->delete_model = Delete_Model_One;
-        $rs = $this->where("cate_id=".$cate_id)->delete();
+        $rs = $this->where("cid=".$cid)->delete();
         return $rs;
     }
 
-    public function deleteCateM($cate_ids){
+    public function deleteCateM($cids){
         $this->delete_model = Delete_Model_Multi;
-        $delsstr = implode(',',$cate_ids);
+        $delsstr = implode(',',$cids);
         //dump($delsstr);die;
-        $rs = $this->where("cate_id in(".$delsstr.")")->delete();
+        $rs = $this->where("cid in(".$delsstr.")")->delete();
         return $rs;
     }
 
     public function chgCatepid($oldpid,$newpid){
-        $cates = $this->where(array("cate_pid"=>$oldpid))->field(array("cate_id"))->select();
+        $cates = $this->where(array("pid"=>$oldpid))->field(array("cid"))->select();
         foreach($cates as $key=>$val){
-            $this->where(array("cate_id"=>$val['cate_id']))->setField("cate_pid",$newpid);
+            $this->where(array("cid"=>$val['cid']))->setField("pid",$newpid);
         }
-        return $this->where(array("cate_pid"=>$newpid))->field(array("cate_id"))->select();
+        return $this->where(array("pid"=>$newpid))->field(array("cid"))->select();
     }
 
 
