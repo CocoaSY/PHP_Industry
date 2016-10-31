@@ -166,10 +166,11 @@
     var getCategoryURL = "__CONTROLLER__/getCategory";
     function getCategory(a){
         $.post(getCategoryURL,{"cid":$(a).attr("cid")},function(data){
-            $("#editTopicCate #e_cid").val(data['t_id']);
-            $("#editTopicCate #e_name").val(data['name']);
-            $("#editTopicCate #e_ename").val(data['ename']);
-            $("#editTopicCate").modal();
+            var json = zsy_json_decode(data);
+            $("#editTopicCate #e_cid").val(json['t_id']);
+            $("#editTopicCate #e_name").val(json['name']);
+            $("#editTopicCate #e_ename").val(json['ename']);
+            $("#editTopicCate").modal("show");
         });
     }
 
@@ -198,15 +199,16 @@
         });
     }
 
-    var delCategoryURL = "__CONTROLLER__Topic/delCategory";
+    var delCategoryURL = "__CONTROLLER__/delCategory";
     function delCategory(a){
         $.post(delCategoryURL,{"cid":$(a).attr("cid")},function(data){
-            if(data['rs'] == 1){
+            var json = zsy_json_decode(data);
+            if(json['rs'] == 1){
                 $(a).parent().parent().remove();
             }else{
 
             }
-            myAlert.setMsg(data['msg']);
+            myAlert.setMsg(json['msg']);
             myAlert.show();
         });
     }

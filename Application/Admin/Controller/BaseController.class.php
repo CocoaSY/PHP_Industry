@@ -48,5 +48,10 @@ class BaseController extends Controller{
 
     }
 
+    protected function ajaxReturn($data) {
+        echo json_encode($data);
+        exit;
+    }
+
 }
 
