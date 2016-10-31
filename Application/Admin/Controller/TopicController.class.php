@@ -29,7 +29,7 @@ class TopicController extends BaseController{
         $topicM = new TopicModel();
         $topics = $topicM
                     ->join("LEFT JOIN __USER__ ON __TOPIC__.userid=__USER__.u_id")
-                    ->join("LEFT JOIN __TOPIC_CATE__ ON __TOPIC__.cateid=__TOPIC_CATE__.t_id")
+                    ->join("LEFT JOIN __TOPIC_CATE__ ON __TOPIC__.cateid=__TOPIC_CATE__.cid")
                     ->select();
         //dump($topics);die;
 
