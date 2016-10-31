@@ -279,14 +279,15 @@
                 myAlert.show();
             },
             success: function(res){
-                if(res['rs'] == 1){ // 成功
+                var json = zsy_json_decode(res);
+                if(json['rs'] == 1){ // 成功
                     // TODO 插入新数据
 
 
                 }else{              // 失败
                     console.log("失败");
                 }
-                myAlert.setMsg(res['msg']);
+                myAlert.setMsg(json['msg']);
             },
             resetForm: false,
             clearForm: false
@@ -297,17 +298,18 @@
     var getBannerUrl = "__CONTROLLER__/getBanner";
     function getBanner(a){
         $.post(getBannerUrl,{"bid":$(a).attr("bid")},function(data){
-            $("#editBanner #e_bn_id").val(data['bn_id']);
-            $("#editBanner #e_bn_name").val(data['bn_name']);
-            $("#editBanner #e_bn_ename").val(data['bn_ename']);
-            $("#editBanner #e_bn_desc").val(data['bn_desc']);
-            if(data['bn_show'] == 1){
+            var json = zsy_json_decode(data);
+            $("#editBanner #e_bn_id").val(json['bn_id']);
+            $("#editBanner #e_bn_name").val(json['bn_name']);
+            $("#editBanner #e_bn_ename").val(json['bn_ename']);
+            $("#editBanner #e_bn_desc").val(json['bn_desc']);
+            if(json['bn_show'] == 1){
                 $("#editBanner #e_bn_show").prop('checked',true);
             }else{
                 $("#editBanner #e_bn_show").prop('checked',false);
             }
-            if(data['bn_pic'].length>0){
-                $("#editBanner img").attr("src",data['bn_pic']);
+            if(json['bn_pic'].length>0){
+                $("#editBanner img").attr("src",json['bn_pic']);
             }
             $('#editBanner').modal();
         });
@@ -316,12 +318,13 @@
     var delBannerUrl = "__CONTROLLER__/delBanner";
     function delBanner(a){
         $.post(delBannerUrl,{"bid":$(a).attr("bid")},function(data){
-            if(data['rs'] == 1){
+            var json = zsy_json_decode(data);
+            if(json['rs'] == 1){
                 $(a).parent().parent().remove();
             }else{
 
             }
-            myAlert.setMsg(data['msg']);
+            myAlert.setMsg(json['msg']);
             myAlert.show();
         });
     }
@@ -337,14 +340,15 @@
                 myAlert.show();
             },
             success: function(res){
-                if(res['rs'] == 1){ // 成功
+                var json = zsy_json_decode(res);
+                if(json['rs'] == 1){ // 成功
                     // TODO 插入新数据
 
 
                 }else{              // 失败
                     console.log("失败");
                 }
-                myAlert.setMsg(res['msg']);
+                myAlert.setMsg(json['msg']);
             },
             resetForm: false,
             clearForm: false

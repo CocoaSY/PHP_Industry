@@ -218,12 +218,8 @@
 </div>
 
 <script type="text/javascript" language="JavaScript">
-    var addVideoUrl = "__CONTROLLER__/addVideo";
-    var delVideoUrl = "__CONTROLLER__/delVideo";
-    var videoUrl = "__CONTROLLER__/video";
-    var updateVideoUrl = "__CONTROLLER__/updateVideo";
-    var uploadVideoUrl = "__CONTROLLER__/uploadVideo";
 
+    var uploadVideoUrl = "__CONTROLLER__/uploadVideo";
     $(document).ready(function(){
         console.log("document ready");
         $('#videoupload').uploadify({
@@ -269,12 +265,14 @@
         });
     });
 
+    var addVideoUrl = "__CONTROLLER__/addVideo";
     function addVideo(name,ename,info){
         $.post(addVideoUrl,{"name":name,"ename":ename,"info":info},function(res){
             $("#addVideo").modal("hide");
-            if(res['rs'] == 1){ // 上传成功
+            var json = zsy_json_decode(res);
+            if(json['rs'] == 1){ // 上传成功
                 // TODO 插入新数据
-                var aVideo = res["info"];
+                var aVideo = json["info"];
 
                 var tables = document.getElementsByTagName("table");
                 var tbodys = tables[0].getElementsByTagName("tbody");
@@ -310,19 +308,21 @@
             }else{              // 上传失败
                 console.log("失败");
             }
-            myAlert.setMsg(res['msg']);
+            myAlert.setMsg(json['msg']);
             myAlert.show();
         });
 
     }
 
+    var videoUrl = "__CONTROLLER__/video";
     function getVideo(a){
         $.post(videoUrl,{"vid":$(a).attr("vid")},function(data){
-            $("#editVideo #e_v_vid").val(data['vid']);
-            $("#editVideo #e_v_name").val(data['name']);
-            $("#editVideo #e_v_ename").val(data['ename']);
-            if(data['path'].length>0){
-                $("#editVideo #e_v_vedio").val(data['path']);
+            var json = zsy_json_decode(data);
+            $("#editVideo #e_v_vid").val(json['vid']);
+            $("#editVideo #e_v_name").val(json['name']);
+            $("#editVideo #e_v_ename").val(json['ename']);
+            if(json['path'].length>0){
+                $("#editVideo #e_v_vedio").val(json['path']);
             }
             $('#editVideo').modal();
         });
@@ -332,43 +332,48 @@
 
     }
 
+    var updateVideoUrl = "__CONTROLLER__/updateVideo";
     function updateVideo(vid,name,ename,info){
         $.post(updateVideoUrl,{"vid":vid,"name":name,"ename":ename,"info":info},function(res){
             $("#editVideo").modal("hide");
-            if(res['rs'] == 1){ // 修改成功
+            var json = zsy_json_decode(res);
+            if(json['rs'] == 1){ // 修改成功
                 // TODO 修改新数据
 
 
             }else{              // 修改失败
                 console.log("失败");
             }
-            myAlert.setMsg(res['msg']);
+            myAlert.setMsg(json['msg']);
             myAlert.show();
         });
     }
 
+    var delVideoUrl = "__CONTROLLER__/delVideo";
     function delVideo(a){
         var vid = $(a).attr("vid");
         $.post(delVideoUrl,{"vid":vid},function(res){
-            if(res['rs']==1){   // 删除成功
+            var json = zsy_json_decode(res);
+            if(json['rs']==1){   // 删除成功
                 $(a).parent().parent().remove();
             }else{              // 删除失败
 
             }
-            myAlert.setMsg(res['msg']);
+            myAlert.setMsg(json['msg']);
             myAlert.show();
         });
     }
 
     function playVideo(a){
         $.post(videoUrl,{"vid":$(a).attr("vid")},function(data){
-            if(data['path'].length>0){
-                $("#playVideo #player").attr("href",data['path']);
+            var json = zsy_json_decode(data);
+            if(json['path'].length>0){
+                $("#playVideo #player").attr("href",json['path']);
                 $('#playVideo').modal();
 
                 flowplayer("player", "__PUBLIC__/flowplayer/flowplayer-3.2.18.swf", {
                     clip: {
-                        url: data['path'],//视频文件地址
+                        url: json['path'],//视频文件地址
                         autoPlay: false,//是否自动播放
                         autoBuffering: true //是否自动缓冲，即当视频文件设置为不自动播放时，播放器仍然预先下载视频文件内容
                     }
