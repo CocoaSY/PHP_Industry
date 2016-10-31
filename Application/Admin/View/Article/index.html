@@ -381,7 +381,8 @@
                 myAlert.setMsg("数据上传中...");
                 myAlert.show();
             },
-            success: function(res){
+            success: function(data){
+                var res = zsy_json_decode(data);
                 if(res['rs'] == 1){ // 成功
                     // TODO 插入新数据
 
@@ -399,29 +400,30 @@
     var getArticleURL = "__CONTROLLER__/getArticle";
     function getArticle(a){
         $.post(getArticleURL,{"aid":$(a).attr("aid")},function(data){
-            $("#editArticle #e_ar_id").val(data['ar_id']);
-            $("#editArticle #e_ar_title").val(data['ar_title']);
-            $("#editArticle #e_ar_author").val(data['ar_author']);
+            var json = zsy_json_decode(data);
+            $("#editArticle #e_ar_id").val(json['ar_id']);
+            $("#editArticle #e_ar_title").val(json['ar_title']);
+            $("#editArticle #e_ar_author").val(json['ar_author']);
 
             var remcomond = document.getElementById("e_ar_rem");
             var sels = remcomond.getElementsByTagName("input");
             for(var i=0;i < sels.length ; i++){
                 var sel = sels[i];
-                if($(sel).val() == data['ar_rem']){
+                if($(sel).val() == json['ar_rem']){
                     $(sel).prop("checked",true);
                 }
             }
 
-            $("#editArticle #e_ar_keywords").val(data['ar_keywords']);
-            $("#editArticle #e_ar_desc").val(data['ar_desc']);
-            $("#editArticle #e_content").val(data['ar_content']);
+            $("#editArticle #e_ar_keywords").val(json['ar_keywords']);
+            $("#editArticle #e_ar_desc").val(json['ar_desc']);
+            $("#editArticle #e_content").val(json['ar_content']);
 
 
             var select = document.getElementById("e_ar_cateid");
             var ops = select.getElementsByTagName("option");
             for(var i=0;i < ops.length ; i++){
                 var op = ops[i];
-                if($(op).val() == data['ar_cateid']){
+                if($(op).val() == json['ar_cateid']){
                     $(op).prop("selected",true);
                 }
             }
@@ -430,13 +432,13 @@
             var ops2 = select2.getElementsByTagName("option");
             for(var j=0;j < ops2.length ; j++){
                 var op2 = ops2[i];
-                if($(op2).val() == data['ari_id']){
+                if($(op2).val() == json['ari_id']){
                     $(op2).prop("selected",true);
                 }
             }
 
-            if(data['ar_pic'].length>0){
-                $("#editArticle img").attr("src",data['ar_pic']);
+            if(json['ar_pic'].length>0){
+                $("#editArticle img").attr("src",json['ar_pic']);
             }else{
                 $("#editArticle img").attr("src","http://www.placehold.it/200x150/EFEFEF/AAAAAA&amp;text=no+image");
             }
@@ -460,7 +462,8 @@
                 myAlert.setMsg("数据更新中...");
                 myAlert.show();
             },
-            success: function(res){
+            success: function(data){
+                var res = zsy_json_decode(data);
                 if(res['rs'] == 1){ // 成功
                     // TODO 更新新数据
 
@@ -478,12 +481,13 @@
     var delArticleURL = "__CONTROLLER__/delArticle";
     function delArticle(){
         $.post(delArticleURL,{"aid":$(a).attr("aid")},function(data){
-            if(data['rs'] == 1){
+            var res = zsy_json_decode(data);
+            if(res['rs'] == 1){
                 $(a).parent().parent().remove();
             }else{
 
             }
-            myAlert.setMsg(data['msg']);
+            myAlert.setMsg(res['msg']);
             myAlert.show();
         });
     }

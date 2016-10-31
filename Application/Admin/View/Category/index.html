@@ -391,14 +391,15 @@
                 myAlert.show();
             },
             success: function(res){
-                if(res['rs'] == 1){ // 成功
+                var json = zsy_json_decode(res);
+                if(json['rs'] == 1){ // 成功
                     // TODO 插入新数据
 
 
                 }else{              // 失败
                     console.log("失败");
                 }
-                myAlert.setMsg(res['msg']);
+                myAlert.setMsg(json['msg']);
             },
             resetForm: false,
             clearForm: false
@@ -408,23 +409,24 @@
     var getCategoryURL = "__CONTROLLER__/getCategory";
     function getCategory(a){
         $.post(getCategoryURL,{"cid":$(a).attr("cid")},function(data){
-            $("#editCategory #e_cate_id").val(data['cate_id']);
-            $("#editCategory #e_cate_name").val(data['cate_name']);
-            $("#editCategory #e_cate_ename").val(data['cate_ename']);
-            $("#editCategory #e_cate_keywords").val(data['cate_keywords']);
-            $("#editCategory #e_cate_desc").val(data['cate_desc']);
-            $("#editCategory #e_content").val(data['cate_content']);
+            var json = zsy_json_decode(data);
+            $("#editCategory #e_cate_id").val(json['cate_id']);
+            $("#editCategory #e_cate_name").val(json['cate_name']);
+            $("#editCategory #e_cate_ename").val(json['cate_ename']);
+            $("#editCategory #e_cate_keywords").val(json['cate_keywords']);
+            $("#editCategory #e_cate_desc").val(json['cate_desc']);
+            $("#editCategory #e_content").val(json['cate_content']);
 
             var type = document.getElementById("e_cate_type");
             var sels = type.getElementsByTagName("input");
             for(var i=0;i < sels.length ; i++){
                 var sel = sels[i];
-                if($(sel).val() == data['cate_type']){
+                if($(sel).val() == json['cate_type']){
                     $(sel).prop("checked",true);
                 }
             }
 
-            if(data['cate_nav'] == 1){
+            if(json['cate_nav'] == 1){
                 $("#editCategory #e_cate_nav").prop('checked',true);
             }
 
@@ -432,16 +434,16 @@
             var ops = select.getElementsByTagName("option");
             for(var i=0;i < ops.length ; i++){
                 var op = ops[i];
-                if($(op).val() == data['cate_pid']){
+                if($(op).val() == json['cate_pid']){
                     $(op).prop("selected",true);
                 }
-                if($(op).val() == data['cate_id']){
+                if($(op).val() == json['cate_id']){
                     $(op).css("display","none");
                 }
             }
 
-            if(data['cate_pic'].length>0){
-                $("#editCategory img").attr("src",data['cate_pic']);
+            if(json['cate_pic'].length>0){
+                $("#editCategory img").attr("src",json['cate_pic']);
             }
 
             var ue2 = UE.getEditor('e_content',{
@@ -464,14 +466,15 @@
                 myAlert.show();
             },
             success: function(res){
-                if(res['rs'] == 1){ // 成功
+                var json = zsy_json_decode(res);
+                if(json['rs'] == 1){ // 成功
                     // TODO 更新新数据
 
 
                 }else{              // 失败
                     console.log("失败");
                 }
-                myAlert.setMsg(res['msg']);
+                myAlert.setMsg(json['msg']);
             },
             resetForm: false,
             clearForm: false
@@ -481,12 +484,13 @@
     var delCategoryURL = "__CONTROLLER__/delCategory";
     function delCategory(a){
         $.post(delCategoryURL,{"cid":$(a).attr("cid")},function(data){
-            if(data['rs'] == 1){
+            var json = zsy_json_decode(data);
+            if(json['rs'] == 1){
                 $(a).parent().parent().remove();
             }else{
 
             }
-            myAlert.setMsg(data['msg']);
+            myAlert.setMsg(json['msg']);
             myAlert.show();
         });
     }

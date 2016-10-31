@@ -171,7 +171,8 @@
         var ninput = $(aDiv).find("#name");
         var eninput = $(aDiv).find("#ename");
         var cninput = $(aDiv).find("#cname");
-        $.post(addIconURL,{"name":ninput.val(),"ename":eninput.val(),"cname":cninput.val()},function(res){
+        $.post(addIconURL,{"name":ninput.val(),"ename":eninput.val(),"cname":cninput.val()},function(data){
+            var res = zsy_json_decode(data);
             if(res['rs']!=0){
                 var aIcon = res['info'];console.log(aIcon);
                 var tr = document.createElement("tr");
@@ -210,10 +211,11 @@
     var getIconURL = "__CONTROLLER__/getIcon";
     function getIcon(a){
         $.post(getIconURL,{"iid":$(a).attr("iid")},function(data){
-            $("#editIcon #e_ari_id").val(data['ari_id']);
-            $("#editIcon #e_name").val(data['ari_name']);
-            $("#editIcon #e_ename").val(data['ari_ename']);
-            $("#editIcon #e_cname").val(data['ari_cname']);
+            var json = zsy_json_decode(data);
+            $("#editIcon #e_ari_id").val(json['ari_id']);
+            $("#editIcon #e_name").val(json['ari_name']);
+            $("#editIcon #e_ename").val(json['ari_ename']);
+            $("#editIcon #e_cname").val(json['ari_cname']);
             $('#editIcon').modal();
         });
     }
@@ -228,7 +230,8 @@
                 myAlert.setMsg("数据更新中...");
                 myAlert.show();
             },
-            success: function(res){
+            success: function(data){
+                var res = zsy_json_decode(data);
                 if(res['rs'] == 1){ // 成功
                     // TODO 更新新数据
 
@@ -246,12 +249,13 @@
     var delIconURL = "__CONTROLLER__/delIcon";
     function delIcon(a){
         $.post(delIconURL,{"iid":$(a).attr("iid")},function(data){
-            if(data['rs'] == 1){
+            var res = zsy_json_decode(data);
+            if(res['rs'] == 1){
                 $(a).parent().parent().remove();
             }else{
 
             }
-            myAlert.setMsg(data['msg']);
+            myAlert.setMsg(res['msg']);
             myAlert.show();
         });
     }

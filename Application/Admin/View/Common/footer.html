@@ -71,8 +71,9 @@
             var val = chgInput.value;
 
             $.post(chgidURL,{"oldid":oldval,"newid":val},function(data){
+                var json = zsy_json_decode(data);
                 chgInput.setAttribute("oldval",val);
-                myAlert.setMsg(data['msg']);
+                myAlert.setMsg(json['msg']);
                 myAlert.show();
             });
         }
